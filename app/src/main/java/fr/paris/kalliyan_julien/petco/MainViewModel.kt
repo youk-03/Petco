@@ -2,9 +2,11 @@ package fr.paris.kalliyan_julien.petco
 
 import android.app.Application
 import android.provider.CalendarContract
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,7 +24,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
@@ -33,8 +37,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -48,6 +54,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.wear.compose.material.SwipeToDismissBox
+import androidx.wear.compose.foundation.SwipeToDismissBoxState
 import kotlin.random.Random
 
 class MainViewModel(application: Application) : AndroidViewModel(application)  {
@@ -61,14 +69,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application)  {
     val i = Random.nextInt(0,message.size)
 
     val animals = listOf(
-        "Dog" to R.drawable.naya,
-        "Cat" to R.drawable.chat,
+        "Naya" to R.drawable.naya,
+        "Gibs" to R.drawable.chat,
     )
 
     //pages
 
     @Composable
-    fun HomeScreen(modifier: Modifier = Modifier) {
+    fun HomeScreen(navController: NavHostController) {
+        //ajouter la prochaine activité qui devrait avoir lieu
+
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -77,28 +87,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application)  {
             Row {
                 Text(message[i])
             }
-            Box(
-                modifier = Modifier
-                    .padding(16.dp) // Espace autour
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(16.dp)) // Coupe les coins pour les arrondir
-                    .background(Color(0xFF590606)) // Ajoute un fond
-                    .border(
-                        width = 2.dp,
-                        color = Color(0xFF341706), // Couleur de la bordure
-                        shape = RoundedCornerShape(16.dp)
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                LazyColumn(Modifier.wrapContentHeight().padding(16.dp)) {
-                    items(animals) {
-                        AnimalCard(it.first,it.second)
-                    }
-                }
-            }
+
+                ShowlistAnimal()
 
             Row {
-                Button(onClick = {}) { Text("Ajouter un compagnon") }
+                Button(onClick = {navigateTo(navController,"add_pet", false)}) { Text("Ajouter un compagnon") }
             }
         }
     }
@@ -115,7 +108,24 @@ class MainViewModel(application: Application) : AndroidViewModel(application)  {
 
     @Composable
     fun AnimalScreen(modifier: Modifier = Modifier) {
-        Text("animal")
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceAround
+        ) {
+
+            Row {
+                Text("vos prochaines activitées: ")
+                //possibilité de cliquer sur une activité / gerer / supprimer etc ordonnées en temps
+            }
+
+
+        }
+    }
+
+    @Composable
+    fun AddpetScreen(){
+        Text("ajouter un animal")
     }
 
     //pages
@@ -134,35 +144,87 @@ class MainViewModel(application: Application) : AndroidViewModel(application)  {
 
     @Composable
     fun AnimalCard(name: String, imageRes: Int) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp), // Espacement entre les cartes
-            shape = RoundedCornerShape(8.dp)
-        ) {
-            Row(
-                modifier = Modifier
-                    .padding(16.dp) // Espacement interne de la carte
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically // Aligne les éléments verticalement
-            ) {
-                // Image de l'animal
-                Image(
-                    painter = painterResource(id = imageRes),
-                    contentDescription = "Animal Image",
+        val dismissState = rememberSwipeToDismissBoxState(
+            confirmValueChange = {
+                false
+            }
+        )
+        androidx.compose.material3.SwipeToDismissBox(
+            state = dismissState,
+            enableDismissFromEndToStart = false,
+            backgroundContent = {
+                Box(
                     modifier = Modifier
-                        .size(64.dp) // Taille de l'image
-                        .clip(CircleShape) // Image ronde
-                        .border(2.dp, Color.Gray, CircleShape), // Bordure autour de l'image
-                    contentScale = ContentScale.Crop // Recadre l'image
-                )
+                        .fillMaxSize()
+                        .padding(vertical = 8.dp)
+                        .background(Color.Transparent)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Delete",
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .padding(16.dp),
+                        tint = Color.White
+                    )
+                }
+            }
+        ) {
 
-                Spacer(modifier = Modifier.width(16.dp)) // Espace entre l'image et le texte
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+                    .clickable(onClick = {}),
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .padding(16.dp) // Espacement interne de la carte
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically // Aligne les éléments verticalement
+                ) {
+                    // Image de l'animal
+                    Image(
+                        painter = painterResource(id = imageRes),
+                        contentDescription = "Animal Image",
+                        modifier = Modifier
+                            .size(64.dp) // Taille de l'image
+                            .clip(CircleShape) // Image ronde
+                            .border(2.dp, Color.Gray, CircleShape), // Bordure autour de l'image
+                        contentScale = ContentScale.Crop // Recadre l'image
+                    )
 
-                // Nom de l'animal
-                Text(
-                    text = name,
-                )
+                    Spacer(modifier = Modifier.width(16.dp)) // Espace entre l'image et le texte
+
+                    // Nom de l'animal
+                    Text(
+                        text = name,
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun ShowlistAnimal(){
+        Box(
+            modifier = Modifier
+                .padding(16.dp) // Espace autour
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp)) // Coupe les coins pour les arrondir
+                .background(Color(0xFF590606)) // Ajoute un fond
+                .border(
+                    width = 2.dp,
+                    color = Color(0xFF341706), // Couleur de la bordure
+                    shape = RoundedCornerShape(16.dp)
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            LazyColumn(Modifier.wrapContentHeight().padding(16.dp)) {
+                items(animals) {
+                    AnimalCard(it.first,it.second)
+                }
             }
         }
     }
