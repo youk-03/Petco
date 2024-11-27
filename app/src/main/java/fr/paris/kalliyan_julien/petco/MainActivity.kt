@@ -44,6 +44,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.wear.compose.navigation.SwipeDismissableNavHost
 import fr.paris.kalliyan_julien.petco.ui.theme.PetCoTheme
 
 class MainActivity : ComponentActivity() {
@@ -81,10 +82,11 @@ fun MainPage(name: String, modifier: Modifier = Modifier, model: MainViewModel =
             startDestination = "home",
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable("home", enterTransition = { slideInHorizontally() }, exitTransition = { slideOutHorizontally()}) { model.HomeScreen() }
+            composable("home", enterTransition = { slideInHorizontally() }, exitTransition = { slideOutHorizontally()}) { model.HomeScreen(navController) }
             composable("pictures", enterTransition = { slideInHorizontally() }, exitTransition = { slideOutHorizontally() }) { model.PicScreen() }
             composable("animals", enterTransition = { slideInHorizontally() }, exitTransition = { slideOutHorizontally() }) { model.AnimalScreen() }
             composable("settings", enterTransition = { slideInHorizontally() }, exitTransition = { slideOutHorizontally() }) { model.SettingsScreen() }
+            composable("add_pet", enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) { model.AddpetScreen() }
         }
     }
 }
