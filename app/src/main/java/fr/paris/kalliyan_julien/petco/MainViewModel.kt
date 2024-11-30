@@ -20,29 +20,43 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -72,63 +86,13 @@ class MainViewModel(application: Application) : AndroidViewModel(application)  {
         "Naya" to R.drawable.naya,
         "Gibs" to R.drawable.chat,
     )
+    val especes = listOf("chat", "chien", "poisson", "perroquet")
 
-    //pages
+    var name = mutableStateOf("")
+    val picture = mutableStateOf("")
+    var espece = mutableStateOf(especes[0])
 
-    @Composable
-    fun HomeScreen(navController: NavHostController) {
-        //ajouter la prochaine activité qui devrait avoir lieu
-
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceAround
-        ) {
-            Row {
-                Text(message[i])
-            }
-
-                ShowlistAnimal()
-
-            Row {
-                Button(onClick = {navigateTo(navController,"add_pet", false)}) { Text("Ajouter un compagnon") }
-            }
-        }
-    }
-
-    @Composable
-    fun PicScreen(modifier: Modifier = Modifier) {
-        Text("pic")
-    }
-
-    @Composable
-    fun SettingsScreen(modifier: Modifier = Modifier) {
-        Text("settings")
-    }
-
-    @Composable
-    fun AnimalScreen(modifier: Modifier = Modifier) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceAround
-        ) {
-
-            Row {
-                Text("vos prochaines activitées: ")
-                //possibilité de cliquer sur une activité / gerer / supprimer etc ordonnées en temps
-            }
-
-
-        }
-    }
-
-    @Composable
-    fun AddpetScreen(){
-        Text("ajouter un animal")
-    }
-
-    //pages
+    var selectedIconIndex = mutableIntStateOf(-1)
 
     //utility
 
@@ -144,6 +108,42 @@ class MainViewModel(application: Application) : AndroidViewModel(application)  {
 
     @Composable
     fun AnimalCard(name: String, imageRes: Int) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+                .clickable(onClick = {}),
+            shape = RoundedCornerShape(8.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .padding(16.dp) // Espacement interne de la carte
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically // Aligne les éléments verticalement
+            ) {
+                // Image de l'animal
+                Image(
+                    painter = painterResource(id = imageRes),
+                    contentDescription = "Animal Image",
+                    modifier = Modifier
+                        .size(64.dp) // Taille de l'image
+                        .clip(CircleShape) // Image ronde
+                        .border(2.dp, Color.Gray, CircleShape), // Bordure autour de l'image
+                    contentScale = ContentScale.Crop // Recadre l'image
+                )
+
+                Spacer(modifier = Modifier.width(16.dp)) // Espace entre l'image et le texte
+
+                // Nom de l'animal
+                Text(
+                    text = name,
+                )
+            }
+        }
+    }
+
+    @Composable
+    fun SlidingCard(toShow : @Composable () -> Unit) {
         val dismissState = rememberSwipeToDismissBoxState(
             confirmValueChange = {
                 false
@@ -170,39 +170,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application)  {
                 }
             }
         ) {
+            toShow()
 
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-                    .clickable(onClick = {}),
-                shape = RoundedCornerShape(8.dp)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .padding(16.dp) // Espacement interne de la carte
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically // Aligne les éléments verticalement
-                ) {
-                    // Image de l'animal
-                    Image(
-                        painter = painterResource(id = imageRes),
-                        contentDescription = "Animal Image",
-                        modifier = Modifier
-                            .size(64.dp) // Taille de l'image
-                            .clip(CircleShape) // Image ronde
-                            .border(2.dp, Color.Gray, CircleShape), // Bordure autour de l'image
-                        contentScale = ContentScale.Crop // Recadre l'image
-                    )
-
-                    Spacer(modifier = Modifier.width(16.dp)) // Espace entre l'image et le texte
-
-                    // Nom de l'animal
-                    Text(
-                        text = name,
-                    )
-                }
-            }
         }
     }
 
@@ -223,7 +192,38 @@ class MainViewModel(application: Application) : AndroidViewModel(application)  {
         ) {
             LazyColumn(Modifier.wrapContentHeight().padding(16.dp)) {
                 items(animals) {
-                    AnimalCard(it.first,it.second)
+                    SlidingCard (toShow = {AnimalCard(it.first,it.second)})
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun ShowListActivity(){
+        Box(
+            modifier = Modifier
+                .padding(16.dp) // Espace autour
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp)) // Coupe les coins pour les arrondir
+                .background(Color(0xFF590606)) // Ajoute un fond
+                .border(
+                    width = 2.dp,
+                    color = Color(0xFF341706), // Couleur de la bordure
+                    shape = RoundedCornerShape(16.dp)
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            LazyColumn(Modifier.wrapContentHeight().padding(16.dp)) {
+                items(message) {
+                    SlidingCard (toShow = {
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp)
+                                .clickable(onClick = {}),
+                            shape = RoundedCornerShape(8.dp)
+                        ) {Text(it)}
+                    })
                 }
             }
         }
