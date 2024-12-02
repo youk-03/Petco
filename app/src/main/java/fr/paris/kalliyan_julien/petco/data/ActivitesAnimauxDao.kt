@@ -1,6 +1,7 @@
 package fr.paris.kalliyan_julien.petco.data
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -10,6 +11,9 @@ import kotlinx.coroutines.flow.Flow
 interface ActivitesAnimauxDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(pays: ActivitesAnimaux)
+
+    @Delete
+    public fun delete(activite: Int, animal: Int)
 
     @Query("SELECT * FROM ActivitesAnimaux")
     suspend fun loadAll(): Flow<List<ActivitesAnimaux>>

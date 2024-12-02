@@ -1,18 +1,13 @@
 package fr.paris.kalliyan_julien.petco
 
 import android.app.Application
-import android.provider.CalendarContract
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -20,43 +15,27 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -65,11 +44,16 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.wear.compose.material.SwipeToDismissBox
-import androidx.wear.compose.foundation.SwipeToDismissBoxState
+import fr.paris.kalliyan_julien.petco.data.Activites
+import fr.paris.kalliyan_julien.petco.data.ActivitesEspeces
+import fr.paris.kalliyan_julien.petco.data.BD
+import fr.paris.kalliyan_julien.petco.data.Especes
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 class MainViewModel(application: Application) : AndroidViewModel(application)  {
@@ -142,6 +126,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application)  {
         }
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun SlidingCard(toShow : @Composable () -> Unit) {
         val dismissState = rememberSwipeToDismissBoxState(
@@ -283,4 +268,30 @@ class MainViewModel(application: Application) : AndroidViewModel(application)  {
         )
     }
 //Icon
+
+    fun loadDefaultDataBase(bd : BD) {
+        val especes = bd.EspecesDao();
+        val activites = bd.ActivitesDao()
+        val activitesEspeces = bd.ActivitesEspecesDao()
+
+        viewModelScope.launch(Dispatchers.IO){
+            especes.insert(Especes(nom="Chien"))
+            especes.insert(Especes(nom="Chat"))
+            especes.insert(Especes(nom="Poisson"))
+
+            activites.insert(Activites(nom="Nourrir"))
+            activites.insert(Activites(nom="Promener"))
+            activites.insert(Activites(nom="Brosser"))
+            activites.insert(Activites(nom="Changer l'eau"))
+
+            activitesEspeces.insert(ActivitesEspeces(activites.getId("Nourrir"),especes.getId("Chien")))
+            activitesEspeces.insert(ActivitesEspeces(activites.getId("Promener"),especes.getId("Chien")))
+            activitesEspeces.insert(ActivitesEspeces(activites.getId("Brosser"),especes.getId("Chien")))
+            activitesEspeces.insert(ActivitesEspeces(activites.getId("Nourrir"),especes.getId("Chat")))
+            activitesEspeces.insert(ActivitesEspeces(activites.getId("Promener"),especes.getId("Chat")))
+            activitesEspeces.insert(ActivitesEspeces(activites.getId("Brosser"),especes.getId("Chat")))
+            activitesEspeces.insert(ActivitesEspeces(activites.getId("Nourrir"),especes.getId("Poisson")))
+            activitesEspeces.insert(ActivitesEspeces(activites.getId("Changer l'eau"),especes.getId("Poisson")))
+        }
+    }
 }

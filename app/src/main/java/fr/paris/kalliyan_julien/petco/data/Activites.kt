@@ -5,6 +5,6 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Activites(
-    @PrimaryKey(autoGenerate = true) val id : Int,
+    @PrimaryKey(autoGenerate = true) var id : Int = 0,
     val nom : String
 )
