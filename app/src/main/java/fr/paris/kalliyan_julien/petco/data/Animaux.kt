@@ -13,7 +13,8 @@ import androidx.room.PrimaryKey
         onDelete = CASCADE)]
 )
 data class Animaux(
-    @PrimaryKey(autoGenerate = true) val id : Int,
+    @PrimaryKey(autoGenerate = true)
+    val id : Int = 0,
     val nom : String,
     val img : String,
     val espece : Int

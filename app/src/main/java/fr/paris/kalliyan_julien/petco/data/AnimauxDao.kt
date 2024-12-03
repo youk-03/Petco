@@ -9,10 +9,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface AnimauxDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(pays: Animaux)
+    suspend fun insert(animal: Animaux)
 
     @Query("SELECT * FROM Animaux")
-    suspend fun loadAll(): Flow<List<Animaux>>
+    fun loadAll(): Flow<List<Animaux>>
 
     @Query("SELECT * FROM Animaux Where nom LIKE :pref || '%'")
     suspend fun getPref(pref : String): Flow<List<Animaux>>

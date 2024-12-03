@@ -12,7 +12,7 @@ interface EspecesDao {
     suspend fun insert(pays: Especes)
 
     @Query("SELECT * FROM Especes")
-    suspend fun loadAll(): Flow<List<Especes>>
+    fun loadAll(): Flow<List<Especes>>
 
     @Query("SELECT * FROM Especes Where nom LIKE :pref || '%'")
     suspend fun getPref(pref : String): Flow<List<Especes>>
