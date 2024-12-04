@@ -21,9 +21,10 @@ import java.sql.Timestamp
     ]
 )
 data class ActivitesPlanifiees(
-    @PrimaryKey(autoGenerate = true) val id : Int,
+    @PrimaryKey(autoGenerate = true) var id : Int = 0,
     val activite : Int,
     val animal : Int,
     val debut : Timestamp,
-    val fin : Timestamp
+    val fin : Timestamp,
+    val repeat : Int
 )
