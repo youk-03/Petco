@@ -44,13 +44,19 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import fr.paris.kalliyan_julien.petco.R
+import fr.paris.kalliyan_julien.petco.data.Activites
+import fr.paris.kalliyan_julien.petco.data.ActivitesEspeces
 import fr.paris.kalliyan_julien.petco.data.BD
+import fr.paris.kalliyan_julien.petco.data.Especes
 import fr.paris.kalliyan_julien.petco.ui.theme.CameraIcon
 import fr.paris.kalliyan_julien.petco.ui.theme.PetIcon
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 class MainViewModel(application: Application) : AndroidViewModel(application)  {
@@ -61,6 +67,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application)  {
 //    val activites_planifieesdao = dao.ActivitesPlanifieesDao()
 //    val activites_especesdao = dao.ActivitesEspecesDao()
 //    val activites_animauxdao = dao.ActivitesAnimauxDao()
+    private val bd by lazy { BD.getDB(application) }
 
     val message = listOf("Bonjour ! C'est un plaisir de vous voir ici.",
         "Bienvenue dans PetCo ! Où chaque animal est roi.",
@@ -253,4 +260,72 @@ class MainViewModel(application: Application) : AndroidViewModel(application)  {
 
 //NAVBAR
 
-}
+    fun loadDefaultDataBase() {
+        val especes = bd.EspecesDao();
+        val activites = bd.ActivitesDao()
+        val activitesEspeces = bd.ActivitesEspecesDao()
+
+        viewModelScope.launch(Dispatchers.IO) {
+            especes.insert(Especes(nom = "Chien"))
+            especes.insert(Especes(nom = "Chat"))
+            especes.insert(Especes(nom = "Poisson"))
+
+            activites.insert(Activites(nom = "Nourrir"))
+            activites.insert(Activites(nom = "Promener"))
+            activites.insert(Activites(nom = "Brosser"))
+            activites.insert(Activites(nom = "Changer l'eau"))
+
+            activitesEspeces.insert(
+                ActivitesEspeces(
+                    activites.getId("Nourrir"),
+                    especes.getId("Chien")
+                )
+            )
+            activitesEspeces.insert(
+                ActivitesEspeces(
+                    activites.getId("Promener"),
+                    especes.getId("Chien")
+                )
+            )
+            activitesEspeces.insert(
+                ActivitesEspeces(
+                    activites.getId("Brosser"),
+                    especes.getId("Chien")
+                )
+            )
+            activitesEspeces.insert(
+                ActivitesEspeces(
+                    activites.getId("Nourrir"),
+                    especes.getId("Chat")
+                )
+            )
+            activitesEspeces.insert(
+                ActivitesEspeces(
+                    activites.getId("Promener"),
+                    especes.getId("Chat")
+                )
+            )
+            activitesEspeces.insert(
+                ActivitesEspeces(
+                    activites.getId("Brosser"),
+                    especes.getId("Chat")
+                )
+            )
+            activitesEspeces.insert(
+                ActivitesEspeces(
+                    activites.getId("Nourrir"),
+                    especes.getId("Poisson")
+                )
+            )
+            activitesEspeces.insert(
+                ActivitesEspeces(
+                    activites.getId("Changer l'eau"),
+                    especes.getId("Poisson")
+                )
+            )
+        }
+
+    }
+
+
+    }

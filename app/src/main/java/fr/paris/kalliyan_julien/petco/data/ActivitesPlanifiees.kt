@@ -24,7 +24,7 @@ data class ActivitesPlanifiees(
     @PrimaryKey(autoGenerate = true) var id : Int = 0,
     val activite : Int,
     val animal : Int,
-    val debut : Timestamp,
-    val fin : Timestamp,
+    val debut : Long, /*stocker temps en seconde puis convertir*/
+    val fin : Long,
     val repeat : Int
 )

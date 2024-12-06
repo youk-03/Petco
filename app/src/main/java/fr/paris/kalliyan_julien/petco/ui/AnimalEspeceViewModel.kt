@@ -1,6 +1,7 @@
 package fr.paris.kalliyan_julien.petco.ui
 
 import android.app.Application
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
@@ -19,12 +20,12 @@ class AnimalEspeceViewModel(application: Application) : AndroidViewModel(applica
         val especesdao = dao.EspecesDao()
         val animauxdao = dao.AnimauxDao()
 
-        var allEspeceFlow = especesdao.loadAll().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
-        var allAnimauxFlow = animauxdao.loadAll().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+        var allEspeceFlow = especesdao.loadAll()//.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+        //var allAnimauxFlow = animauxdao.loadAll().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
         var name = mutableStateOf("")
-        var espece = mutableStateOf(allEspeceFlow.value[0].nom)
-        var especetmp = mutableStateOf(allEspeceFlow.value[0])
+        //var espece = mutableStateOf(allEspeceFlow.value[0].nom)
+        //var especetmp = mutableStateOf(allEspeceFlow.value[0])
         var icone = mutableIntStateOf(0)
 
         val animals = listOf(

@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import fr.paris.kalliyan_julien.petco.data.Especes
 import fr.paris.kalliyan_julien.petco.ui.AnimalEspeceViewModel
 import fr.paris.kalliyan_julien.petco.ui.MainViewModel
 import fr.paris.kalliyan_julien.petco.ui.theme.CameraIcon
@@ -44,10 +45,10 @@ import kotlinx.coroutines.flow.forEach
 @Composable
 fun AddpetScreen(model : AnimalEspeceViewModel){
 
-    var expanded by remember { mutableStateOf(false) }
-    var esp by model.espece
-    var esptmp by model.especetmp
     val allespece by model.allEspeceFlow.collectAsState(emptyList())
+    var expanded by remember { mutableStateOf(false) }
+    var esp by remember { mutableStateOf("chat") } //by remember { mutableStateOf(allespece[0].nom) }
+    var esptmp by remember { mutableStateOf(Especes(2,"naya")) } //by remember { mutableStateOf(allespece[0]) }
 
     Column(
         modifier = Modifier.fillMaxSize(),

@@ -13,14 +13,14 @@ interface ActivitesEspecesDao {
     suspend fun insert(pays: ActivitesEspeces)
 
     @Delete
-    public fun delete(activite: Int,espece: Int)
+    suspend fun delete(activite: ActivitesEspeces)
 
     @Query("SELECT * FROM ActivitesEspeces")
-    suspend fun loadAll(): Flow<List<ActivitesEspeces>>
+     fun loadAll(): Flow<List<ActivitesEspeces>>
 
     @Query("SELECT * FROM Activites WHERE id in (SELECT activite FROM ActivitesEspeces WHERE espece = :espece)")
-    suspend fun getActivites(espece : Int): Flow<List<Activites>>
+     fun getActivites(espece : Int): Flow<List<Activites>>
 
     @Query("SELECT * FROM Especes WHERE id in (SELECT espece FROM ActivitesEspeces WHERE activite = :activite)")
-    suspend fun getEspeces(activite : Int): Flow<List<Especes>>
+     fun getEspeces(activite : Int): Flow<List<Especes>>
 }

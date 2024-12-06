@@ -1,6 +1,9 @@
 package fr.paris.kalliyan_julien.petco
 
+import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -21,6 +24,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import fr.paris.kalliyan_julien.petco.data.BD
 import fr.paris.kalliyan_julien.petco.screen.AddpetScreen
 import fr.paris.kalliyan_julien.petco.screen.AnimalScreen
 import fr.paris.kalliyan_julien.petco.screen.HomeScreen
@@ -31,6 +35,7 @@ import fr.paris.kalliyan_julien.petco.ui.MainViewModel
 import fr.paris.kalliyan_julien.petco.ui.theme.PetCoTheme
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -47,11 +52,27 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+private fun isFirstLaunch(context : Context): Boolean {
+    val sharedPreferences = context.getSharedPreferences("app_prefs", MODE_PRIVATE)
+    val isFirstLaunch = sharedPreferences.getBoolean("is_first_launch", true)
+
+    if (isFirstLaunch) {
+        // Marquez comme non-première ouverture
+        sharedPreferences.edit().putBoolean("is_first_launch", false).apply()
+    }
+
+    return isFirstLaunch
+}
+
 
 
 @Composable
-fun MainPage(name: String, modifier: Modifier = Modifier, model: MainViewModel = viewModel(), animal_espece_model: AnimalEspeceViewModel = viewModel()) {
+fun MainPage(name: String, modifier: Modifier = Modifier, model: MainViewModel = viewModel(), animalEspeceModel: AnimalEspeceViewModel = viewModel()) {
     val context = LocalContext.current
+//    if (isFirstLaunch(context)) {
+//        model.loadDefaultDataBase()
+//        Log.d("bd", "full")
+//    }
 
     val snackbarHostState = remember { SnackbarHostState() }
     val navController = rememberNavController()
@@ -69,7 +90,7 @@ fun MainPage(name: String, modifier: Modifier = Modifier, model: MainViewModel =
             composable("pictures", enterTransition = { slideInHorizontally() }, exitTransition = { slideOutHorizontally() }) { PicScreen() }
             composable("animals", enterTransition = { slideInHorizontally() }, exitTransition = { slideOutHorizontally() }) { AnimalScreen(model) }
             composable("settings", enterTransition = { slideInHorizontally() }, exitTransition = { slideOutHorizontally() }) { SettingsScreen() }
-            composable("add_pet", enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) { AddpetScreen(animal_espece_model) }
+            composable("add_pet", enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) { AddpetScreen(animalEspeceModel) }
         }
     }
 }

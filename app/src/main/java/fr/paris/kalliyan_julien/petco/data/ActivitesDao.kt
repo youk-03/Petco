@@ -10,16 +10,16 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ActivitesDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(pays: Activites)
+    suspend fun insert(activites: Activites)
 
     @Delete
-    public fun delete(id : Int)
+    suspend fun delete(activites: Activites)
 
     @Query("SELECT * FROM Activites")
-    suspend fun loadAll(): Flow<List<Activites>>
+    fun loadAll(): Flow<List<Activites>>
 
     @Query("SELECT * FROM Activites Where nom LIKE :pref || '%'")
-    suspend fun getPref(pref : String): Flow<List<Activites>>
+    fun getPref(pref : String): Flow<List<Activites>>
 
     @Query("SELECT id FROM Activites Where nom LIKE :nom")
     suspend fun getId(nom : String): Int

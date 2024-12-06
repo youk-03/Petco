@@ -13,13 +13,13 @@ interface AnimauxDao {
     suspend fun insert(animal: Animaux)
 
     @Delete
-    public fun delete(id : Int)
+    public fun delete(animal: Animaux)
 
     @Query("SELECT * FROM Animaux")
     fun loadAll(): Flow<List<Animaux>>
 
     @Query("SELECT * FROM Animaux Where nom LIKE :pref || '%'")
-    suspend fun getPref(pref : String): Flow<List<Animaux>>
+     fun getPref(pref : String): Flow<List<Animaux>>
 
     @Query("SELECT id FROM Animaux Where nom LIKE :nom")
     suspend fun getId(nom : String): Int
