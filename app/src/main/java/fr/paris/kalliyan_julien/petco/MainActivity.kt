@@ -25,11 +25,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import fr.paris.kalliyan_julien.petco.data.BD
+import fr.paris.kalliyan_julien.petco.screen.ActivitesScreen
+import fr.paris.kalliyan_julien.petco.screen.AddActivityScreen
 import fr.paris.kalliyan_julien.petco.screen.AddpetScreen
-import fr.paris.kalliyan_julien.petco.screen.AnimalScreen
+import fr.paris.kalliyan_julien.petco.screen.ActivitesScreen
 import fr.paris.kalliyan_julien.petco.screen.HomeScreen
 import fr.paris.kalliyan_julien.petco.screen.PicScreen
 import fr.paris.kalliyan_julien.petco.screen.SettingsScreen
+import fr.paris.kalliyan_julien.petco.ui.AnimalActiviteesViewModel
 import fr.paris.kalliyan_julien.petco.ui.AnimalEspeceViewModel
 import fr.paris.kalliyan_julien.petco.ui.MainViewModel
 import fr.paris.kalliyan_julien.petco.ui.theme.PetCoTheme
@@ -67,7 +70,7 @@ private fun isFirstLaunch(context : Context): Boolean {
 
 
 @Composable
-fun MainPage(name: String, modifier: Modifier = Modifier, model: MainViewModel = viewModel(), animalEspeceModel: AnimalEspeceViewModel = viewModel()) {
+fun MainPage(name: String, modifier: Modifier = Modifier, model: MainViewModel = viewModel(), animalEspeceModel: AnimalEspeceViewModel = viewModel(), animalActivitesModel : AnimalActiviteesViewModel = viewModel()) {
     val context = LocalContext.current
 //    if (isFirstLaunch(context)) {
 //        model.loadDefaultDataBase()
@@ -88,9 +91,10 @@ fun MainPage(name: String, modifier: Modifier = Modifier, model: MainViewModel =
         ) {
             composable("home", enterTransition = { slideInHorizontally() }, exitTransition = { slideOutHorizontally()}) { HomeScreen(navController,model) }
             composable("pictures", enterTransition = { slideInHorizontally() }, exitTransition = { slideOutHorizontally() }) { PicScreen() }
-            composable("animals", enterTransition = { slideInHorizontally() }, exitTransition = { slideOutHorizontally() }) { AnimalScreen(model) }
+            composable("animals", enterTransition = { slideInHorizontally() }, exitTransition = { slideOutHorizontally() }) { ActivitesScreen(animalActivitesModel, navController, model) }
             composable("settings", enterTransition = { slideInHorizontally() }, exitTransition = { slideOutHorizontally() }) { SettingsScreen() }
             composable("add_pet", enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) { AddpetScreen(animalEspeceModel) }
+            composable("add_activites", enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) { AddActivityScreen(animalActivitesModel) }
         }
     }
 }
