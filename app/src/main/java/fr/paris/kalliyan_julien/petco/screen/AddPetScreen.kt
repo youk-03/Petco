@@ -78,20 +78,17 @@ fun AddpetScreen(model : AnimalEspeceViewModel){
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceAround
     ) {
-        //nom
-        //espece parmis un choix d'espece ou une nouvelle
-        //photo parmis choix ou une nouvelle
 
         Row{
             Text("nom de votre nouveaux compagnon: ", modifier = Modifier.padding(10.dp))
         }
 
         Row {
-
             OutlinedTextField(value = model.name.value, onValueChange = {model.name.value = it}, label = { Text("nom") } )
-
         }
+
         Row(modifier = Modifier.padding(20.dp)) {
+
             Button(onClick = {/*ajouter une espece*/}){ Icon(Icons.Filled.Add,"add species") }
 
             ExposedDropdownMenuBox(

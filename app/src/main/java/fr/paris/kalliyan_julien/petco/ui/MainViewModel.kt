@@ -67,7 +67,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application)  {
 //    val activites_planifieesdao = dao.ActivitesPlanifieesDao()
 //    val activites_especesdao = dao.ActivitesEspecesDao()
 //    val activites_animauxdao = dao.ActivitesAnimauxDao()
-    private val bd by lazy { BD.getDB(application) }
+//    private val bd by lazy { BD.getDB(application) }
 
     val message = listOf("Bonjour ! C'est un plaisir de vous voir ici.",
         "Bienvenue dans PetCo ! Où chaque animal est roi.",
@@ -195,37 +195,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application)  {
         }
     }
 
-    @Composable
-    fun ShowListActivity(){
-        Box(
-            modifier = Modifier
-                .padding(16.dp) // Espace autour
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(16.dp)) // Coupe les coins pour les arrondir
-                .background(Color(0xFF590606)) // Ajoute un fond
-                .border(
-                    width = 2.dp,
-                    color = Color(0xFF341706), // Couleur de la bordure
-                    shape = RoundedCornerShape(16.dp)
-                ),
-            contentAlignment = Alignment.Center
-        ) {
-            LazyColumn(Modifier.wrapContentHeight().padding(16.dp)) {
-                items(message) {
-                    SlidingCard (toShow = {
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 8.dp)
-                                .clickable(onClick = {}),
-                            shape = RoundedCornerShape(8.dp)
-                        ) {Text(it)}
-                    })
-                }
-            }
-        }
-    }
-
     //utility
 
 
@@ -260,72 +229,5 @@ class MainViewModel(application: Application) : AndroidViewModel(application)  {
 
 //NAVBAR
 
-    fun loadDefaultDataBase() {
-        val especes = bd.EspecesDao();
-        val activites = bd.ActivitesDao()
-        val activitesEspeces = bd.ActivitesEspecesDao()
 
-        viewModelScope.launch(Dispatchers.IO) {
-            especes.insert(Especes(nom = "Chien"))
-            especes.insert(Especes(nom = "Chat"))
-            especes.insert(Especes(nom = "Poisson"))
-
-            activites.insert(Activites(nom = "Nourrir"))
-            activites.insert(Activites(nom = "Promener"))
-            activites.insert(Activites(nom = "Brosser"))
-            activites.insert(Activites(nom = "Changer l'eau"))
-
-            activitesEspeces.insert(
-                ActivitesEspeces(
-                    activites.getId("Nourrir"),
-                    especes.getId("Chien")
-                )
-            )
-            activitesEspeces.insert(
-                ActivitesEspeces(
-                    activites.getId("Promener"),
-                    especes.getId("Chien")
-                )
-            )
-            activitesEspeces.insert(
-                ActivitesEspeces(
-                    activites.getId("Brosser"),
-                    especes.getId("Chien")
-                )
-            )
-            activitesEspeces.insert(
-                ActivitesEspeces(
-                    activites.getId("Nourrir"),
-                    especes.getId("Chat")
-                )
-            )
-            activitesEspeces.insert(
-                ActivitesEspeces(
-                    activites.getId("Promener"),
-                    especes.getId("Chat")
-                )
-            )
-            activitesEspeces.insert(
-                ActivitesEspeces(
-                    activites.getId("Brosser"),
-                    especes.getId("Chat")
-                )
-            )
-            activitesEspeces.insert(
-                ActivitesEspeces(
-                    activites.getId("Nourrir"),
-                    especes.getId("Poisson")
-                )
-            )
-            activitesEspeces.insert(
-                ActivitesEspeces(
-                    activites.getId("Changer l'eau"),
-                    especes.getId("Poisson")
-                )
-            )
-        }
-
-    }
-
-
-    }
+}

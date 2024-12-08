@@ -7,6 +7,12 @@ import fr.paris.kalliyan_julien.petco.data.BD
 public class AnimalActiviteesViewModel(application: Application)  : AndroidViewModel(application){
 
     private val dao by lazy { BD.getDB(application) }
+    val activitesdao = dao.ActivitesDao()
+    val animauxdao = dao.AnimauxDao()
+    val activitesPlanifieesdao = dao.ActivitesPlanifieesDao()
+
+    var allActivitesFlow = activitesdao.loadAll()
+    var allActivitesPlanifieesFlow = activitesPlanifieesdao.loadAll()
 
 
 }

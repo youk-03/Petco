@@ -30,9 +30,7 @@ class AnimalEspeceViewModel(application: Application) : AndroidViewModel(applica
         var add = mutableStateOf(false)
 
         var name = mutableStateOf("")
-        //var espece = mutableStateOf(allEspeceFlow.value[0].nom)
         var espece = mutableStateOf(Especes(-1,""))
-        //var especetmp = mutableStateOf(allEspeceFlow.value[0])
 
         val animals = listOf(
                 "Naya" to R.drawable.naya,
