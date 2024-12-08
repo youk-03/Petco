@@ -31,7 +31,7 @@ abstract class BD : RoomDatabase() {
         private var instance: BD? = null
 
         fun getDB(c: Context): BD {
-            c.deleteDatabase("petco")
+            //c.deleteDatabase("petco")
             if (instance != null) return instance!!
             instance = Room.databaseBuilder(c.applicationContext, BD::class.java, "petnnco")
                 .addCallback(DatabaseCallback())
@@ -54,6 +54,8 @@ abstract class BD : RoomDatabase() {
                     especes?.insert(Especes(nom = "Chien"))
                     especes?.insert(Especes(nom = "Chat"))
                     especes?.insert(Especes(nom = "Poisson"))
+                    especes?.insert(Especes(nom = "Hamster"))
+                    especes?.insert(Especes(nom = "Lapin"))
 
                     activites?.insert(Activites(nom = "Nourrir"))
                     activites?.insert(Activites(nom = "Promener"))

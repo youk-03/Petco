@@ -1,5 +1,7 @@
 package fr.paris.kalliyan_julien.petco.screen
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,11 +16,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -33,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import fr.paris.kalliyan_julien.petco.data.Especes
@@ -47,8 +53,25 @@ fun AddpetScreen(model : AnimalEspeceViewModel){
 
     val allespece by model.allEspeceFlow.collectAsState(emptyList())
     var expanded by remember { mutableStateOf(false) }
-    var esp by remember { mutableStateOf("chat") } //by remember { mutableStateOf(allespece[0].nom) }
-    var esptmp by remember { mutableStateOf(Especes(2,"naya")) } //by remember { mutableStateOf(allespece[0]) }
+    var esp by remember { mutableStateOf("sélectionnez une espèce") }
+    var esptmp by model.espece
+    var adding by model.add
+    var ico by model.selectedIconIndex
+    val context = LocalContext.current
+
+    if(adding) {
+        if(model.name.value == "" || esp == "sélectionnez une espèce" || ico == -1){
+            Toast.makeText(context, "Nom, espèce ou icone ne doivent pas être vide !", Toast.LENGTH_SHORT) .show()
+            Log.d("test", "${model.name.value}, $esp, $ico")
+            adding = false
+        }
+        else {
+            model.addAnimal(model.name.value.trim(), esptmp.id, ico)
+            model.name.value = ""
+            esp = "sélectionnez une espèce"
+            ico = -1
+        }
+    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -60,7 +83,7 @@ fun AddpetScreen(model : AnimalEspeceViewModel){
         //photo parmis choix ou une nouvelle
 
         Row{
-            Text("nom de votre nouveaux compagnon: ")
+            Text("nom de votre nouveaux compagnon: ", modifier = Modifier.padding(10.dp))
         }
 
         Row {
@@ -68,7 +91,8 @@ fun AddpetScreen(model : AnimalEspeceViewModel){
             OutlinedTextField(value = model.name.value, onValueChange = {model.name.value = it}, label = { Text("nom") } )
 
         }
-        Row {
+        Row(modifier = Modifier.padding(20.dp)) {
+            Button(onClick = {/*ajouter une espece*/}){ Icon(Icons.Filled.Add,"add species") }
 
             ExposedDropdownMenuBox(
                 expanded = expanded,
@@ -93,7 +117,8 @@ fun AddpetScreen(model : AnimalEspeceViewModel){
                         DropdownMenuItem(
                             onClick = {
                                 esptmp = e
-                                expanded = false },
+                                expanded = false
+                                esp = e.nom      },
                             text = { Text(text = e.nom) }
                         )
 
@@ -104,7 +129,7 @@ fun AddpetScreen(model : AnimalEspeceViewModel){
 
         }
         Row {
-            Text("Choississez une icone ou prenez une photo de votre compagnon : ")
+            Text("Choississez une icone ou prenez une photo de votre compagnon : ", modifier = Modifier.padding(10.dp))
         }
 
         Row{
@@ -129,7 +154,7 @@ fun AddpetScreen(model : AnimalEspeceViewModel){
                                 .clip(RoundedCornerShape(8.dp))
                                 .background(if (isSelected) Color.Blue else Color.White)
                                 .clickable {
-                                    model.selectedIconIndex.intValue = index // Met à jour l'icône sélectionnée
+                                    ico = index
                                 },
                             contentAlignment = Alignment.Center
                         ) {
@@ -147,7 +172,7 @@ fun AddpetScreen(model : AnimalEspeceViewModel){
 
         Row{
             Button(modifier = Modifier.padding(10.dp), onClick = {}){CameraIcon()}
-            Button(modifier = Modifier.padding(10.dp),onClick = {}){ Text("valider") }
+            Button(modifier = Modifier.padding(10.dp),onClick = { adding = true }){ Text("valider") }
         }
 
     }
