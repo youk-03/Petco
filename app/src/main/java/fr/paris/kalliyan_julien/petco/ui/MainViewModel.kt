@@ -78,18 +78,18 @@ class MainViewModel(application: Application) : AndroidViewModel(application)  {
     val i = Random.nextInt(0,message.size)
     //val especes = listOf("chat", "chien", "poisson", "perroquet")
 
-    val picture = mutableStateOf("")
+   // val picture = mutableStateOf("")
     //var espece = mutableStateOf(especes[0])
 
-    val animals = listOf(
-        "Naya" to R.drawable.naya,
-        "Gibs" to R.drawable.chat,
-        "chat_noir" to R.drawable.chatn,
-        "dog" to R.drawable.dog,
-        "hamser" to R.drawable.hamster,
-        "fish" to R.drawable.fish,
-        "bunny" to R.drawable.lapin
-    )
+//    val animals = listOf(
+//        "Naya" to R.drawable.naya,
+//        "Gibs" to R.drawable.chat,
+//        "chat_noir" to R.drawable.chatn,
+//        "dog" to R.drawable.dog,
+//        "hamser" to R.drawable.hamster,
+//        "fish" to R.drawable.fish,
+//        "bunny" to R.drawable.lapin
+//    )
 
     //utility
 
@@ -102,99 +102,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application)  {
             }
         }
     }
-
-    @Composable
-    fun AnimalCard(name: String, imageRes: Int) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-                .clickable(onClick = {}),
-            shape = RoundedCornerShape(8.dp)
-        ) {
-            Row(
-                modifier = Modifier
-                    .padding(16.dp) // Espacement interne de la carte
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically // Aligne les éléments verticalement
-            ) {
-                // Image de l'animal
-                Image(
-                    painter = painterResource(id = imageRes),
-                    contentDescription = "Animal Image",
-                    modifier = Modifier
-                        .size(64.dp) // Taille de l'image
-                        .clip(CircleShape) // Image ronde
-                        .border(2.dp, Color.Gray, CircleShape), // Bordure autour de l'image
-                    contentScale = ContentScale.Crop // Recadre l'image
-                )
-
-                Spacer(modifier = Modifier.width(16.dp)) // Espace entre l'image et le texte
-
-                // Nom de l'animal
-                Text(
-                    text = name,
-                )
-            }
-        }
-    }
-
-    @Composable
-    fun SlidingCard(toShow : @Composable () -> Unit) {
-        val dismissState = rememberSwipeToDismissBoxState(
-            confirmValueChange = {
-                false
-            }
-        )
-        androidx.compose.material3.SwipeToDismissBox(
-            state = dismissState,
-            enableDismissFromEndToStart = false,
-            backgroundContent = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(vertical = 8.dp)
-                        .background(Color.Transparent)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = "Delete",
-                        modifier = Modifier
-                            .align(Alignment.CenterStart)
-                            .padding(16.dp),
-                        tint = Color.White
-                    )
-                }
-            }
-        ) {
-            toShow()
-
-        }
-    }
-
-    @Composable
-    fun ShowlistAnimal(){
-        Box(
-            modifier = Modifier
-                .padding(16.dp) // Espace autour
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(16.dp)) // Coupe les coins pour les arrondir
-                .background(Color(0xFF590606)) // Ajoute un fond
-                .border(
-                    width = 2.dp,
-                    color = Color(0xFF341706), // Couleur de la bordure
-                    shape = RoundedCornerShape(16.dp)
-                ),
-            contentAlignment = Alignment.Center
-        ) {
-            LazyColumn(Modifier.wrapContentHeight().padding(16.dp)) {
-                items(animals) {
-                    SlidingCard (toShow = {AnimalCard(it.first,it.second)})
-                }
-            }
-        }
-    }
-
     //utility
 
 

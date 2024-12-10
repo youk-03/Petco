@@ -25,3 +25,14 @@ fun PetIcon() {
     )
 }
 //Icon
+//img
+val animals = listOf(
+    "Naya" to R.drawable.naya,
+    "Gibs" to R.drawable.chat,
+    "chat_noir" to R.drawable.chatn,
+    "dog" to R.drawable.dog,
+    "hamser" to R.drawable.hamster,
+    "fish" to R.drawable.fish,
+    "bunny" to R.drawable.lapin
+)
+//img

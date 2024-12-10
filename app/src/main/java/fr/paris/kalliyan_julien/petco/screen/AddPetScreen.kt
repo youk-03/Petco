@@ -45,6 +45,7 @@ import fr.paris.kalliyan_julien.petco.data.Especes
 import fr.paris.kalliyan_julien.petco.ui.AnimalEspeceViewModel
 import fr.paris.kalliyan_julien.petco.ui.MainViewModel
 import fr.paris.kalliyan_julien.petco.ui.theme.CameraIcon
+import fr.paris.kalliyan_julien.petco.ui.theme.animals
 import kotlinx.coroutines.flow.forEach
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -143,7 +144,7 @@ fun AddpetScreen(model : AnimalEspeceViewModel){
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    items(model.animals.size) { index ->
+                    items(animals.size) { index ->
                         val isSelected = (index == model.selectedIconIndex.intValue)
                         Box(
                             modifier = Modifier
@@ -156,7 +157,7 @@ fun AddpetScreen(model : AnimalEspeceViewModel){
                             contentAlignment = Alignment.Center
                         ) {
                             Image(
-                                painter = painterResource(id = model.animals[index].second),
+                                painter = painterResource(id = animals[index].second),
                                 contentDescription = "Icon $index",
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier.size(40.dp)
