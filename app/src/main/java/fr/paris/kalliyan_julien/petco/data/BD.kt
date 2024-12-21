@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
     ActivitesPlanifiees::class,
     Animaux::class,
     Especes::class
-                      ], version = 7)
+                      ], version = 8)
 abstract class BD : RoomDatabase() {
     abstract fun ActivitesDao(): ActivitesDao
     abstract fun ActivitesAnimauxDao(): ActivitesAnimauxDao
@@ -31,7 +31,7 @@ abstract class BD : RoomDatabase() {
         private var instance: BD? = null
 
         fun getDB(c: Context): BD {
-            //c.deleteDatabase("petco")
+            //c.deleteDatabase("petnnco") //oblige pour que ca reset aaah
             if (instance != null) return instance!!
             instance = Room.databaseBuilder(c.applicationContext, BD::class.java, "petnnco")
                 .addCallback(DatabaseCallback())

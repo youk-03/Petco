@@ -50,12 +50,12 @@ class AnimalEspeceViewModel(application: Application) : AndroidViewModel(applica
         var espece = mutableStateOf(Especes(-1,""))
 
         var selectedIconIndex = mutableIntStateOf(-1)
+        var iconPath = mutableStateOf("")
 
 
-        fun addAnimal(name: String, espece: Int, icone: Int){
-                val ic = animals[icone].first
+        fun addAnimal(name: String, espece: Int, img: String?, iconPath : String?){
                 viewModelScope.launch(Dispatchers.IO) {
-                        animauxdao.insert(Animaux(nom=name, img = ic, espece = espece))
+                        animauxdao.insert(Animaux(nom=name, iconName = img, iconPath = iconPath, espece = espece))
                 }
                 add.value = false
         }

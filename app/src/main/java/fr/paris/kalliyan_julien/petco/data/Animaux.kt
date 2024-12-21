@@ -16,6 +16,7 @@ data class Animaux(
     @PrimaryKey(autoGenerate = true)
     val id : Int = 0,
     val nom : String,
-    val img : String,
+    val iconName : String?,
+    val iconPath : String?,
     val espece : Int
 )

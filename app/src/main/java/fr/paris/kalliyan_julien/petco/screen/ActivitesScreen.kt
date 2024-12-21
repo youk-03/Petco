@@ -40,11 +40,6 @@ fun ActivitesScreen(model : AnimalActiviteesViewModel, navController: NavControl
 //            //model.ShowListActivity()
 //        }
 
-        Row {
-            //deplacer dans la page de l'animal en ajoutant l'animal en arg
-            //Button(onClick = {mainmodel.navigateTo(navController,"add_activites", false)}) { Text("Ajouter une activité") }
-        }
-
 
     }
 }

@@ -2,6 +2,8 @@ package fr.paris.kalliyan_julien.petco.screen
 
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -58,17 +60,45 @@ fun AddpetScreen(model : AnimalEspeceViewModel){
     var esptmp by model.espece
     var adding by model.add
     var ico by model.selectedIconIndex
+    var iconPath by model.iconPath
     val context = LocalContext.current
+    val listanimals = animals.toList()
+
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { uri ->
+            uri?.let {
+                // Stocker le chemin URI dans la base de données
+                iconPath = uri.toString()
+            }
+        }
+    )
 
     if(adding) {
-        if(model.name.value == "" || esp == "sélectionnez une espèce" || ico == -1){
+        if(model.name.value == "" || esp == "sélectionnez une espèce" || (ico == -1 && iconPath == "")){
             Toast.makeText(context, "Nom, espèce ou icone ne doivent pas être vide !", Toast.LENGTH_SHORT) .show()
             Log.d("test", "${model.name.value}, $esp, $ico")
             adding = false
         }
         else {
-            model.addAnimal(model.name.value.trim(), esptmp.id, ico)
+            if(iconPath != "") {
+                model.addAnimal(
+                    model.name.value.trim(),
+                    esptmp.id,
+                    null,
+                    iconPath
+                )
+            }
+            else {
+                model.addAnimal(
+                    model.name.value.trim(),
+                    esptmp.id,
+                    listanimals[ico].first,
+                    null
+                )
+            }
             model.name.value = ""
+            iconPath = ""
             esp = "sélectionnez une espèce"
             ico = -1
         }
@@ -144,7 +174,7 @@ fun AddpetScreen(model : AnimalEspeceViewModel){
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    items(animals.size) { index ->
+                    items(listanimals.size) { index ->
                         val isSelected = (index == model.selectedIconIndex.intValue)
                         Box(
                             modifier = Modifier
@@ -157,7 +187,7 @@ fun AddpetScreen(model : AnimalEspeceViewModel){
                             contentAlignment = Alignment.Center
                         ) {
                             Image(
-                                painter = painterResource(id = animals[index].second),
+                                painter = painterResource(id = listanimals[index].second),
                                 contentDescription = "Icon $index",
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier.size(40.dp)
@@ -169,8 +199,9 @@ fun AddpetScreen(model : AnimalEspeceViewModel){
         }
 
         Row{
-            Button(modifier = Modifier.padding(10.dp), onClick = {}){CameraIcon()}
+            Button(modifier = Modifier.padding(10.dp), onClick = {  galleryLauncher.launch("image/*")  }){CameraIcon()}
             Button(modifier = Modifier.padding(10.dp),onClick = { adding = true }){ Text("valider") }
+
         }
 
     }

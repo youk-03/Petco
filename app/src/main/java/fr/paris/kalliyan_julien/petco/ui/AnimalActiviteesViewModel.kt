@@ -27,7 +27,7 @@ public class AnimalActiviteesViewModel(application: Application)  : AndroidViewM
     /////////////////////////////////////////////////////////////////////////////////:
     var allAnimauxFlow = animauxdao.loadAll()
 
-    var current_animal = mutableStateOf(Animaux(-1,"null","null",-1)) //animal courant (après avoir cliqué sur l'animal)
+    var current_animal = mutableStateOf(Animaux(-1,"null","null","null",-1)) //animal courant (après avoir cliqué sur l'animal)
 
     /////////////////////////////////////////////////////////////////////////////////
 

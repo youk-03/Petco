@@ -29,14 +29,17 @@ import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import fr.paris.kalliyan_julien.petco.data.Animaux
 import fr.paris.kalliyan_julien.petco.ui.AnimalActiviteesViewModel
 import fr.paris.kalliyan_julien.petco.ui.AnimalEspeceViewModel
@@ -72,7 +75,6 @@ fun HomeScreen(navController: NavHostController, model : MainViewModel, animalAc
 
 @Composable
 fun ShowlistAnimal(list : List<Animaux>, animalActivitesViewModel: AnimalActiviteesViewModel, model : MainViewModel, navController: NavHostController){
-    var img = 0
     Box(
         modifier = Modifier
             .padding(16.dp) // Espace autour
@@ -88,14 +90,8 @@ fun ShowlistAnimal(list : List<Animaux>, animalActivitesViewModel: AnimalActivit
     ) {
         LazyColumn(Modifier.wrapContentHeight().padding(16.dp)) {
             items(list) {
-                for(p in animals){//ça le rend lent trouver une autre manière de faire !
-                    if(p.first == it.img){
-                        img = p.second
-                        break
-                    }
-                }
-                SlidingCard (toShow = {AnimalCard(it,
-                    img,
+                SlidingCard (toShow = {AnimalCard(it,it.iconPath,
+                    it.iconName,
                     onClick = {
                     animalActivitesViewModel.current_animal.value = it
                         model.navigateTo(navController,"animal",false)
@@ -107,7 +103,7 @@ fun ShowlistAnimal(list : List<Animaux>, animalActivitesViewModel: AnimalActivit
 }
 
 @Composable
-fun AnimalCard(animal: Animaux, image: Int, onClick : () -> Unit) {
+fun AnimalCard(animal: Animaux, iconPath: String?,image : String?, onClick : () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -122,15 +118,7 @@ fun AnimalCard(animal: Animaux, image: Int, onClick : () -> Unit) {
             verticalAlignment = Alignment.CenterVertically // Aligne les éléments verticalement
         ) {
             // Image de l'animal
-            Image(
-                painter = painterResource(image),
-                contentDescription = "Animal Image",
-                modifier = Modifier
-                    .size(64.dp) // Taille de l'image
-                    .clip(CircleShape) // Image ronde
-                    .border(2.dp, Color.Gray, CircleShape), // Bordure autour de l'image
-                contentScale = ContentScale.Crop // Recadre l'image
-            )
+            AnimalIcon(image, iconPath)
 
             Spacer(modifier = Modifier.width(16.dp)) // Espace entre l'image et le texte
 
@@ -139,6 +127,36 @@ fun AnimalCard(animal: Animaux, image: Int, onClick : () -> Unit) {
                 text = animal.nom,
             )
         }
+    }
+}
+
+@Composable
+fun AnimalIcon(iconName: String?, customIconPath: String?) {
+    if (customIconPath != null) {
+        AsyncImage(
+            model = customIconPath,
+            contentDescription = "Custom Icon",
+            modifier = Modifier
+                .size(64.dp) // Taille de l'image
+                .clip(CircleShape) // Image ronde
+                .border(2.dp, Color.Gray, CircleShape), // Bordure autour de l'image
+            contentScale = ContentScale.Crop // Recadre l'image
+        )
+    } else if (iconName != null) {
+        // Charger l'icône par défaut depuis res/drawable
+        val context = LocalContext.current
+        val resId = remember(iconName) {
+            animals[iconName]
+        }
+        Image(
+            painter = painterResource(id = resId!!),//gestion erreur peut etre ???????????????????????????
+            contentDescription = "Default Icon",
+            modifier = Modifier
+                .size(64.dp) // Taille de l'image
+                .clip(CircleShape) // Image ronde
+                .border(2.dp, Color.Gray, CircleShape), // Bordure autour de l'image
+            contentScale = ContentScale.Crop // Recadre l'image
+        )
     }
 }
 

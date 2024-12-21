@@ -26,7 +26,7 @@ fun PetIcon() {
 }
 //Icon
 //img
-val animals = listOf(
+val animals = mapOf(
     "Naya" to R.drawable.naya,
     "Gibs" to R.drawable.chat,
     "chat_noir" to R.drawable.chatn,
