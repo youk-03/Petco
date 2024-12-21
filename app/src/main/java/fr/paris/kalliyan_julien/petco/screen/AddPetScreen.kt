@@ -48,6 +48,7 @@ import fr.paris.kalliyan_julien.petco.ui.AnimalEspeceViewModel
 import fr.paris.kalliyan_julien.petco.ui.MainViewModel
 import fr.paris.kalliyan_julien.petco.ui.theme.CameraIcon
 import fr.paris.kalliyan_julien.petco.ui.theme.animals
+import fr.paris.kalliyan_julien.petco.ui.theme.copyImageToAppDirectory
 import kotlinx.coroutines.flow.forEach
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,8 +69,12 @@ fun AddpetScreen(model : AnimalEspeceViewModel){
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri ->
             uri?.let {
-                // Stocker le chemin URI dans la base de données
-                iconPath = uri.toString()
+                val imagePath = copyImageToAppDirectory(context, it)
+                if(imagePath != null) {
+                    iconPath = imagePath
+                } else {
+                    Log.e("GalleryLauch", "failed saving image")
+                }
             }
         }
     )
