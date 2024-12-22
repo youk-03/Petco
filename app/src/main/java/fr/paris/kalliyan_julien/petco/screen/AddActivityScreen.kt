@@ -2,16 +2,31 @@ package fr.paris.kalliyan_julien.petco.screen
 
 import android.app.TimePickerDialog
 import android.util.Log
+import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,13 +40,59 @@ import fr.paris.kalliyan_julien.petco.ui.AnimalActiviteesViewModel
 import fr.paris.kalliyan_julien.petco.ui.AnimalEspeceViewModel
 import java.util.Calendar
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddActivityScreen(model : AnimalActiviteesViewModel){
+
+    val context = LocalContext.current
+
     var hebdo by model.hebdo
     var daily by model.daily
     var unique by model.unique
-    var activites by model.activites
+
     var notes by model.notes
+
+    var activite by remember { mutableStateOf("sélectionnez une activité") }
+    val allactivites by model.allActivitesFlow.collectAsState(emptyList())
+    var activitetmp by model.activite
+
+    var isDialogOpen by model.isDialogOpen
+    var add_activity by model.add_activity
+
+    var expanded by remember { mutableStateOf(false) }
+
+    var hourSelected by model.hour
+    var minuteSelected by model.hour
+
+
+    //ajout d'une actvites dans la bd
+    if(isDialogOpen){
+        BasicAlertDialog(
+            onDismissRequest = {isDialogOpen = false},
+            modifier = Modifier.padding(20.dp).background(MaterialTheme.colorScheme.background, shape = RoundedCornerShape(16.dp)),
+            content = {
+                Column (modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+                    Row{
+                        Text("Entrer un nom  d'activité", modifier = Modifier.padding(bottom = 8.dp))
+                    }
+                    Row{
+                        OutlinedTextField(modifier = Modifier.fillMaxWidth(),value = add_activity, onValueChange = { add_activity = it}, label = { Text("nom de l'activité") }, singleLine = true)
+                    }
+                    Row{
+                        Button(modifier = Modifier.padding(10.dp),onClick = {
+                            if(add_activity != "") model.addActivite(add_activity.trim())
+                            else { Toast.makeText(context, "L'activité ne peut pas être vide !", Toast.LENGTH_SHORT) .show()}
+                        } )
+                        {Text("Valider")}
+
+                        Button(modifier = Modifier.padding(10.dp), onClick = {isDialogOpen = false}){Text("Annuler")}
+                    }
+                }
+            }
+
+        )
+    }
+    //ajout d'une activites dans la bd
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -39,8 +100,43 @@ fun AddActivityScreen(model : AnimalActiviteesViewModel){
         verticalArrangement = Arrangement.SpaceAround
     )
     {
-        Row{
-            OutlinedTextField(value = activites, onValueChange = {activites = it}, label = { Text("Actitivés") } )
+        Row(modifier = Modifier.padding(20.dp)) {
+
+            Button(onClick = { isDialogOpen = true }){ Icon(Icons.Filled.Add,"add activity") }
+
+            ExposedDropdownMenuBox(
+                expanded = expanded,
+                onExpandedChange = {expanded = ! expanded}
+            ) {
+                TextField(
+                    modifier = Modifier.menuAnchor(),
+                    readOnly = true,
+                    value = activite,
+                    onValueChange = {activite = it},
+                    label = { Text("Activités") },
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                    }
+                )
+
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false}
+                ) {
+                    for (a in allactivites){
+                        DropdownMenuItem(
+                            onClick = {
+                                activitetmp = a
+                                expanded = false
+                                activite = a.nom      },
+                            text = { Text(text = a.nom) }
+                        )
+
+                    }
+                }
+            }
+
+
         }
 
         Row{
@@ -49,22 +145,24 @@ fun AddActivityScreen(model : AnimalActiviteesViewModel){
         Row{
             TimePicker { hour, minute ->
                 Log.d("TimePicker", "Selected Time: $hour:$minute")
+                hourSelected = hour
+                minuteSelected = minute
             }
         }
         Row{
             Text("Envoyer une notification :")
         }
         Row{
-            //notif hebdo quotidienne ou unique
+            //notif hebdo quotidienne ou unique on peut pas deselctionner (c nul)
             RadioButton(enabled = true,selected = hebdo, onClick = {
-                hebdo = true
+                hebdo = !hebdo
                 daily = false
                 unique = false
             })
             Text("Hebdomadaire")
 
             RadioButton(enabled = true,selected = daily, onClick = {
-                daily = true
+                daily = !daily
                 hebdo = false
                 unique = false
             })
@@ -73,7 +171,7 @@ fun AddActivityScreen(model : AnimalActiviteesViewModel){
             RadioButton(enabled = true,selected = unique, onClick = {
                 hebdo = false
                 daily = false
-                unique = true
+                unique = !unique
             })
             Text("Unique")
         }

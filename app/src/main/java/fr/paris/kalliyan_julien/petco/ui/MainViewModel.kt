@@ -53,6 +53,7 @@ import fr.paris.kalliyan_julien.petco.data.Activites
 import fr.paris.kalliyan_julien.petco.data.ActivitesEspeces
 import fr.paris.kalliyan_julien.petco.data.BD
 import fr.paris.kalliyan_julien.petco.data.Especes
+import fr.paris.kalliyan_julien.petco.navigateTo
 import fr.paris.kalliyan_julien.petco.ui.theme.CameraIcon
 import fr.paris.kalliyan_julien.petco.ui.theme.PetIcon
 import kotlinx.coroutines.Dispatchers
@@ -90,19 +91,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application)  {
 //        "fish" to R.drawable.fish,
 //        "bunny" to R.drawable.lapin
 //    )
-
-    //utility
-
-    fun navigateTo(navController: NavController, route: String, home: Boolean) {
-        val currentDestination = navController.currentBackStackEntry?.destination?.route
-        if (currentDestination != route) {
-            navController.navigate(route) {
-                if(home) launchSingleTop = true
-                else  popUpTo("home")
-            }
-        }
-    }
-    //utility
 
 
 

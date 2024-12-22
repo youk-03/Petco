@@ -5,6 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Especes(
-    @PrimaryKey(autoGenerate = true) var id : Int = 0,
+    @PrimaryKey(autoGenerate = true)
+    val id : Int = 0,
     val nom : String,
 )

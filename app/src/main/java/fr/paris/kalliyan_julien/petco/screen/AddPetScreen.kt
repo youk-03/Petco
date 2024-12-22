@@ -20,12 +20,15 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -43,7 +46,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import fr.paris.kalliyan_julien.petco.data.Especes
+import fr.paris.kalliyan_julien.petco.navigateTo
 import fr.paris.kalliyan_julien.petco.ui.AnimalEspeceViewModel
 import fr.paris.kalliyan_julien.petco.ui.MainViewModel
 import fr.paris.kalliyan_julien.petco.ui.theme.CameraIcon
@@ -53,7 +58,7 @@ import kotlinx.coroutines.flow.forEach
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddpetScreen(model : AnimalEspeceViewModel){
+fun AddpetScreen(model : AnimalEspeceViewModel, navController: NavHostController){
 
     val allespece by model.allEspeceFlow.collectAsState(emptyList())
     var expanded by remember { mutableStateOf(false) }
@@ -64,6 +69,8 @@ fun AddpetScreen(model : AnimalEspeceViewModel){
     var iconPath by model.iconPath
     val context = LocalContext.current
     val listanimals = animals.toList()
+    var add_espece by model.add_espece
+    var isDialogOpen by model.isDialogOpen
 
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
@@ -78,6 +85,8 @@ fun AddpetScreen(model : AnimalEspeceViewModel){
             }
         }
     )
+
+    //ajout animal dans la bd
 
     if(adding) {
         if(model.name.value == "" || esp == "sélectionnez une espèce" || (ico == -1 && iconPath == "")){
@@ -106,8 +115,40 @@ fun AddpetScreen(model : AnimalEspeceViewModel){
             iconPath = ""
             esp = "sélectionnez une espèce"
             ico = -1
+            navigateTo(navController, "home", true)
+
         }
     }
+    //ajout animal dans la bd
+
+    //ajout d'une espece dans la bd
+    if(isDialogOpen){
+        BasicAlertDialog(
+            onDismissRequest = {isDialogOpen = false},
+            modifier = Modifier.padding(20.dp).background(MaterialTheme.colorScheme.background, shape = RoundedCornerShape(16.dp)),
+            content = {
+                Column (modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+                    Row{
+                        Text("Entrer un nom  d'espèce", modifier = Modifier.padding(bottom = 8.dp))
+                    }
+                    Row{
+                       OutlinedTextField(modifier = Modifier.fillMaxWidth(),value = add_espece, onValueChange = { add_espece = it}, label = { Text("nom de l'espèce") }, singleLine = true)
+                    }
+                    Row{
+                        Button(modifier = Modifier.padding(10.dp),onClick = {
+                            if(add_espece != "") model.addEspece(add_espece.trim())
+                            else { Toast.makeText(context, "Le nom de l'espèce ne peut pas être vide !", Toast.LENGTH_SHORT) .show()}
+                        } )
+                        {Text("Valider")}
+
+                        Button(modifier = Modifier.padding(10.dp), onClick = {isDialogOpen = false}){Text("Annuler")}
+                    }
+                }
+            }
+
+        )
+    }
+    //ajout d'une espece dans la bd
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -125,7 +166,7 @@ fun AddpetScreen(model : AnimalEspeceViewModel){
 
         Row(modifier = Modifier.padding(20.dp)) {
 
-            Button(onClick = {/*ajouter une espece*/}){ Icon(Icons.Filled.Add,"add species") }
+            Button(onClick = { isDialogOpen = true }){ Icon(Icons.Filled.Add,"add species") }
 
             ExposedDropdownMenuBox(
                 expanded = expanded,

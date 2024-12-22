@@ -29,6 +29,7 @@ import fr.paris.kalliyan_julien.petco.screen.ActivitesScreen
 import fr.paris.kalliyan_julien.petco.screen.AddActivityScreen
 import fr.paris.kalliyan_julien.petco.screen.AddpetScreen
 import fr.paris.kalliyan_julien.petco.screen.ActivitesScreen
+import fr.paris.kalliyan_julien.petco.screen.AddEspeceScreen
 import fr.paris.kalliyan_julien.petco.screen.AnimalScreen
 import fr.paris.kalliyan_julien.petco.screen.HomeScreen
 import fr.paris.kalliyan_julien.petco.screen.PicScreen
@@ -94,9 +95,10 @@ fun MainPage(name: String, modifier: Modifier = Modifier, model: MainViewModel =
             composable("pictures", enterTransition = { slideInHorizontally() }, exitTransition = { slideOutHorizontally() }) { PicScreen() }
             composable("animals", enterTransition = { slideInHorizontally() }, exitTransition = { slideOutHorizontally() }) { ActivitesScreen(animalActivitesModel, navController, model) }
             composable("settings", enterTransition = { slideInHorizontally() }, exitTransition = { slideOutHorizontally() }) { SettingsScreen() }
-            composable("add_pet", enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) { AddpetScreen(animalEspeceModel) }
+            composable("add_pet", enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) { AddpetScreen(animalEspeceModel, navController) }
             composable("add_activites", enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) { AddActivityScreen(animalActivitesModel) }
-            composable("animal", enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) { AnimalScreen(animalActivitesModel, model, navController)}
+            composable("animal", enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) { AnimalScreen(animalActivitesModel, animalEspeceModel, model, navController)}
+            composable("add_espece", enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) { AddEspeceScreen(animalEspeceModel, navController) }
         }
     }
 }

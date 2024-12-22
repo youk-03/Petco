@@ -1,6 +1,7 @@
 package fr.paris.kalliyan_julien.petco.ui
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -34,6 +35,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import androidx.compose.runtime.State
 
 class AnimalEspeceViewModel(application: Application) : AndroidViewModel(application)  {
 
@@ -52,12 +54,58 @@ class AnimalEspeceViewModel(application: Application) : AndroidViewModel(applica
         var selectedIconIndex = mutableIntStateOf(-1)
         var iconPath = mutableStateOf("")
 
+        private val _especeName = mutableStateOf("")
+        val especename: State<String> = _especeName
+
+        var add_espece = mutableStateOf("")
+        var isDialogOpen = mutableStateOf(false)
+
 
         fun addAnimal(name: String, espece: Int, img: String?, iconPath : String?){
                 viewModelScope.launch(Dispatchers.IO) {
-                        animauxdao.insert(Animaux(nom=name, iconName = img, iconPath = iconPath, espece = espece))
+                        val id = animauxdao.insert(Animaux(nom=name, iconName = img, iconPath = iconPath, espece = espece))
+                        if(id < 0){
+                                //echec
+                                Log.d("bd", "insertion erreur addAnimal")
+                        }
                 }
                 add.value = false
         }
+
+        fun addEspece(espece: String){
+                viewModelScope.launch(Dispatchers.IO) {
+                        val id = especesdao.insert(Especes(nom = espece))
+                        if(id < 0){
+                                //echec
+                                Log.d("bd", "insertion erreur addEspece")
+                        }
+                }
+                isDialogOpen.value = false
+        }
+
+        fun deleteAnimal(animal : Animaux){
+                viewModelScope.launch(Dispatchers.IO) {
+                       val row = animauxdao.delete(animal)
+                        if(row > 0) {
+                                //echec
+                                Log.d("bd", "supression erreur deleteAnimal")
+                        }
+                }
+        }
+
+
+
+        fun getEspeceFromDB(espece : Int) {
+                viewModelScope.launch {
+                       try{
+                               _especeName.value =  especesdao.getEspeces(espece)
+                       } catch (e : Exception) {
+                               Log.e("AnimalEspeceViewModel", "Error getting string espece from ID")
+                               _especeName.value = "Error: ${e.message}"
+                       }
+                 }
+        }
+
+
 
 }

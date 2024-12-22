@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import fr.paris.kalliyan_julien.petco.data.Animaux
+import fr.paris.kalliyan_julien.petco.navigateTo
 import fr.paris.kalliyan_julien.petco.ui.AnimalActiviteesViewModel
 import fr.paris.kalliyan_julien.petco.ui.AnimalEspeceViewModel
 import fr.paris.kalliyan_julien.petco.ui.MainViewModel
@@ -68,7 +69,7 @@ fun HomeScreen(navController: NavHostController, model : MainViewModel, animalAc
         }
 
         Row(modifier = Modifier.padding(20.dp)) {
-            Button(onClick = {model.navigateTo(navController,"add_pet", false)}) { Text("Ajouter un compagnon") }
+            Button(onClick = {navigateTo(navController,"add_pet", false)}) { Text("Ajouter un compagnon") }
         }
     }
 }
@@ -94,7 +95,7 @@ fun ShowlistAnimal(list : List<Animaux>, animalActivitesViewModel: AnimalActivit
                     it.iconName,
                     onClick = {
                     animalActivitesViewModel.current_animal.value = it
-                        model.navigateTo(navController,"animal",false)
+                        navigateTo(navController,"animal",false)
                     }
                 ) })
             }

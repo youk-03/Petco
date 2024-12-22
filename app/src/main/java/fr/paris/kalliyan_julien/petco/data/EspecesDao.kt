@@ -11,10 +11,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface EspecesDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(espece: Especes)
+    suspend fun insert(espece: Especes) : Long
 
     @Delete
-    public fun delete(espece: Especes)
+    fun delete(espece: Especes)
 
     @Query("SELECT * FROM Especes")
     fun loadAll(): Flow<List<Especes>>
@@ -24,4 +24,7 @@ interface EspecesDao {
 
     @Query("SELECT id FROM Especes Where nom LIKE :nom")
     suspend fun getId(nom : String): Int
+
+    @Query("SELECT nom FROM Especes Where id = :resid")
+    suspend fun getEspeces(resid : Int): String
 }

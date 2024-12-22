@@ -10,10 +10,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface AnimauxDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(animal: Animaux)
+    suspend fun insert(animal: Animaux) : Long //id
 
     @Delete
-    public fun delete(animal: Animaux)
+    fun delete(animal: Animaux) : Int //affected line
 
     @Query("SELECT * FROM Animaux")
     fun loadAll(): Flow<List<Animaux>>

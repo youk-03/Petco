@@ -1,10 +1,19 @@
 package fr.paris.kalliyan_julien.petco.ui
 
 import android.app.Application
+import android.util.Log
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+import fr.paris.kalliyan_julien.petco.data.Activites
 import fr.paris.kalliyan_julien.petco.data.Animaux
 import fr.paris.kalliyan_julien.petco.data.BD
+import fr.paris.kalliyan_julien.petco.data.Especes
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.util.Calendar
 
 public class AnimalActiviteesViewModel(application: Application)  : AndroidViewModel(application){
 
@@ -12,7 +21,7 @@ public class AnimalActiviteesViewModel(application: Application)  : AndroidViewM
     val daily =  mutableStateOf(false)
     val unique =  mutableStateOf(false)
 
-    val activites = mutableStateOf("")
+    val activite = mutableStateOf(Activites(id = -1, nom = "test"))
     val notes = mutableStateOf("")
 
     private val dao by lazy { BD.getDB(application) }
@@ -23,6 +32,12 @@ public class AnimalActiviteesViewModel(application: Application)  : AndroidViewM
     var allActivitesFlow = activitesdao.loadAll()
     var allActivitesPlanifieesFlow = activitesPlanifieesdao.loadAll()
 
+    var isDialogOpen = mutableStateOf(false)
+    var add_activity = mutableStateOf("")
+
+    val hour = mutableIntStateOf(-1)
+    val minute = mutableIntStateOf(-1)
+
 
     /////////////////////////////////////////////////////////////////////////////////:
     var allAnimauxFlow = animauxdao.loadAll()
@@ -30,6 +45,18 @@ public class AnimalActiviteesViewModel(application: Application)  : AndroidViewM
     var current_animal = mutableStateOf(Animaux(-1,"null","null","null",-1)) //animal courant (après avoir cliqué sur l'animal)
 
     /////////////////////////////////////////////////////////////////////////////////
+
+
+    fun addActivite(activites: String){
+        viewModelScope.launch(Dispatchers.IO) {
+            val id = activitesdao.insert(Activites(nom = activites))
+            if(id < 0){
+                //echec
+                Log.d("bd", "insertion erreur addEspece")
+            }
+        }
+        isDialogOpen.value = false
+    }
 
 
 }
