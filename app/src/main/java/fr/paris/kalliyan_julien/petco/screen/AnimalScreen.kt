@@ -1,5 +1,6 @@
 package fr.paris.kalliyan_julien.petco.screen
 
+import android.annotation.SuppressLint
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -65,7 +66,7 @@ fun AnimalScreen(animalActivitesModel : AnimalActiviteesViewModel, animalEspeceV
                     animal.iconName = null
                 } else {
                     if(animal.iconName == null)
-                    animal.iconPath = null
+                        animal.iconPath = null
                     Log.e("GalleryLauch", "failed saving image")
                 }
             }
