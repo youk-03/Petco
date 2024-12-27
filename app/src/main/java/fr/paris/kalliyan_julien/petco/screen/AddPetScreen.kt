@@ -115,6 +115,7 @@ fun AddpetScreen(model : AnimalEspeceViewModel, navController: NavHostController
             iconPath = ""
             esp = "sélectionnez une espèce"
             ico = -1
+            iconPath = ""
             navigateTo(navController, "home", true)
 
         }

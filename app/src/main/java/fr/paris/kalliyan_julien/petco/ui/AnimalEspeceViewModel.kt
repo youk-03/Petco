@@ -61,6 +61,7 @@ class AnimalEspeceViewModel(application: Application) : AndroidViewModel(applica
         var isDialogOpen = mutableStateOf(false)
 
 
+
         fun addAnimal(name: String, espece: Int, img: String?, iconPath : String?){
                 viewModelScope.launch(Dispatchers.IO) {
                         val id = animauxdao.insert(Animaux(nom=name, iconName = img, iconPath = iconPath, espece = espece))

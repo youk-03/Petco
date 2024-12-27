@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -23,4 +24,7 @@ interface AnimauxDao {
 
     @Query("SELECT id FROM Animaux Where nom LIKE :nom")
     suspend fun getId(nom : String): Int
+
+    @Update
+    suspend fun updateAnimal(animaux: Animaux): Int
 }

@@ -21,6 +21,7 @@ public class AnimalActiviteesViewModel(application: Application)  : AndroidViewM
     val daily =  mutableStateOf(false)
     val unique =  mutableStateOf(false)
 
+
     val activite = mutableStateOf(Activites(id = -1, nom = "test"))
     val notes = mutableStateOf("")
 
@@ -42,7 +43,9 @@ public class AnimalActiviteesViewModel(application: Application)  : AndroidViewM
     /////////////////////////////////////////////////////////////////////////////////:
     var allAnimauxFlow = animauxdao.loadAll()
 
-    var current_animal = mutableStateOf(Animaux(-1,"null","null","null",-1)) //animal courant (après avoir cliqué sur l'animal)
+    var current_animal = mutableStateOf(Animaux(-1,"","","",-1)) //animal courant (après avoir cliqué sur l'animal)
+
+    var isDialogOpenModif = mutableStateOf(false)
 
     /////////////////////////////////////////////////////////////////////////////////
 
@@ -57,6 +60,18 @@ public class AnimalActiviteesViewModel(application: Application)  : AndroidViewM
         }
         isDialogOpen.value = false
     }
+
+    fun updateAnimal(animal: Animaux){
+        viewModelScope.launch {
+            val rowsUpdated = animauxdao.updateAnimal(animal)
+            if (rowsUpdated <= 0) {
+                Log.d("bd", "modification erreur updateAnimal")
+            }
+        }
+        isDialogOpenModif.value = false
+    }
+
+
 
 
 }

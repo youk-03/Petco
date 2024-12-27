@@ -28,8 +28,6 @@ import fr.paris.kalliyan_julien.petco.data.BD
 import fr.paris.kalliyan_julien.petco.screen.ActivitesScreen
 import fr.paris.kalliyan_julien.petco.screen.AddActivityScreen
 import fr.paris.kalliyan_julien.petco.screen.AddpetScreen
-import fr.paris.kalliyan_julien.petco.screen.ActivitesScreen
-import fr.paris.kalliyan_julien.petco.screen.AddEspeceScreen
 import fr.paris.kalliyan_julien.petco.screen.AnimalScreen
 import fr.paris.kalliyan_julien.petco.screen.HomeScreen
 import fr.paris.kalliyan_julien.petco.screen.PicScreen
@@ -57,27 +55,11 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-private fun isFirstLaunch(context : Context): Boolean {
-    val sharedPreferences = context.getSharedPreferences("app_prefs", MODE_PRIVATE)
-    val isFirstLaunch = sharedPreferences.getBoolean("is_first_launch", true)
-
-    if (isFirstLaunch) {
-        // Marquez comme non-première ouverture
-        sharedPreferences.edit().putBoolean("is_first_launch", false).apply()
-    }
-
-    return isFirstLaunch
-}
-
 
 
 @Composable
 fun MainPage(name: String, modifier: Modifier = Modifier, model: MainViewModel = viewModel(), animalEspeceModel: AnimalEspeceViewModel = viewModel(), animalActivitesModel : AnimalActiviteesViewModel = viewModel()) {
     val context = LocalContext.current
-//    if (isFirstLaunch(context)) {
-//        model.loadDefaultDataBase()
-//        Log.d("bd", "full")
-//    }
 
     val snackbarHostState = remember { SnackbarHostState() }
     val navController = rememberNavController()
@@ -98,7 +80,6 @@ fun MainPage(name: String, modifier: Modifier = Modifier, model: MainViewModel =
             composable("add_pet", enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) { AddpetScreen(animalEspeceModel, navController) }
             composable("add_activites", enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) { AddActivityScreen(animalActivitesModel) }
             composable("animal", enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) { AnimalScreen(animalActivitesModel, animalEspeceModel, model, navController)}
-            composable("add_espece", enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) { AddEspeceScreen(animalEspeceModel, navController) }
         }
     }
 }

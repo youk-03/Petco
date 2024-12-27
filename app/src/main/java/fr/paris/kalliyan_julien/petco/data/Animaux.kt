@@ -15,8 +15,8 @@ import androidx.room.PrimaryKey
 data class Animaux(
     @PrimaryKey(autoGenerate = true)
     val id : Int = 0,
-    val nom : String,
-    val iconName : String?,
-    val iconPath : String?,
+    var nom : String,
+    var iconName : String?,
+    var iconPath : String?,
     val espece : Int
 )
