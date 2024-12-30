@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -36,19 +37,30 @@ import fr.paris.kalliyan_julien.petco.ui.AnimalActiviteesViewModel
 import fr.paris.kalliyan_julien.petco.ui.AnimalEspeceViewModel
 import fr.paris.kalliyan_julien.petco.ui.MainViewModel
 import fr.paris.kalliyan_julien.petco.ui.theme.PetCoTheme
+import fr.paris.kalliyan_julien.petco.ui.theme.SettingsManager
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+    private lateinit var settingsManager: SettingsManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        settingsManager = SettingsManager(this)
+
         enableEdgeToEdge()
-        setContent {
-            PetCoTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    MainPage(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+        lifecycleScope.launch {
+            settingsManager.theme.collect { theme ->
+                setContent {
+                    PetCoTheme(theme = theme) {
+                        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                            MainPage(
+                                name = "Android",
+                                modifier = Modifier.padding(innerPadding),
+                                settingsManager = settingsManager
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -58,7 +70,7 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-fun MainPage(name: String, modifier: Modifier = Modifier, model: MainViewModel = viewModel(), animalEspeceModel: AnimalEspeceViewModel = viewModel(), animalActivitesModel : AnimalActiviteesViewModel = viewModel()) {
+fun MainPage(name: String, modifier: Modifier = Modifier, model: MainViewModel = viewModel(), animalEspeceModel: AnimalEspeceViewModel = viewModel(), animalActivitesModel : AnimalActiviteesViewModel = viewModel(), settingsManager : SettingsManager) {
     val context = LocalContext.current
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -76,7 +88,7 @@ fun MainPage(name: String, modifier: Modifier = Modifier, model: MainViewModel =
             composable("home", enterTransition = { slideInHorizontally() }, exitTransition = { slideOutHorizontally()}) { HomeScreen(navController,model, animalActivitesModel) }
             composable("pictures", enterTransition = { slideInHorizontally() }, exitTransition = { slideOutHorizontally() }) { PicScreen() }
             composable("animals", enterTransition = { slideInHorizontally() }, exitTransition = { slideOutHorizontally() }) { ActivitesScreen(animalActivitesModel, navController, model) }
-            composable("settings", enterTransition = { slideInHorizontally() }, exitTransition = { slideOutHorizontally() }) { SettingsScreen() }
+            composable("settings", enterTransition = { slideInHorizontally() }, exitTransition = { slideOutHorizontally() }) { SettingsScreen(settingsManager = settingsManager, model = model) }
             composable("add_pet", enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) { AddpetScreen(animalEspeceModel, navController) }
             composable("add_activites", enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) { AddActivityScreen(animalActivitesModel) }
             composable("animal", enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) { AnimalScreen(animalActivitesModel, animalEspeceModel, model, navController)}

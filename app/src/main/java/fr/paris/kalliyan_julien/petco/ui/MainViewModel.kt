@@ -56,6 +56,8 @@ import fr.paris.kalliyan_julien.petco.data.Especes
 import fr.paris.kalliyan_julien.petco.navigateTo
 import fr.paris.kalliyan_julien.petco.ui.theme.CameraIcon
 import fr.paris.kalliyan_julien.petco.ui.theme.PetIcon
+import fr.paris.kalliyan_julien.petco.ui.theme.SettingsManager
+import fr.paris.kalliyan_julien.petco.ui.theme.ThemeType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.random.Random
@@ -123,6 +125,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application)  {
     }
 
 //NAVBAR
+
+    fun changeTheme(theme: ThemeType,  settingsManager: SettingsManager) {
+        viewModelScope.launch(Dispatchers.IO) {
+            settingsManager.saveTheme(theme)
+        }
+    }
 
 
 }

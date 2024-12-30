@@ -31,7 +31,7 @@ abstract class BD : RoomDatabase() {
         private var instance: BD? = null
 
         fun getDB(c: Context): BD {
-            c.deleteDatabase("petnnco") //oblige pour que ca reset aaah
+            //c.deleteDatabase("petnnco") //oblige pour que ca reset aaah
             if (instance != null) return instance!!
             instance = Room.databaseBuilder(c.applicationContext, BD::class.java, "petnnco")
                 .addCallback(DatabaseCallback())
