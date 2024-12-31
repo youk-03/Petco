@@ -30,13 +30,13 @@ fun PetIcon() {
 //Icon
 //img
 val animals = mapOf(
-    "Naya" to R.drawable.naya,
-    "Gibs" to R.drawable.chat,
-    "chat_noir" to R.drawable.chatn,
-    "dog" to R.drawable.dog,
-    "hamser" to R.drawable.hamster,
-    "fish" to R.drawable.fish,
-    "bunny" to R.drawable.lapin
+    "naya" to R.drawable.naya,
+    "gibs" to R.drawable.gibs,
+    "chat" to R.drawable.chat,
+    "chien" to R.drawable.chien,
+    "hamster" to R.drawable.hamster,
+    "poisson" to R.drawable.poisson,
+    "lapin" to R.drawable.lapin
 )
 //img
 

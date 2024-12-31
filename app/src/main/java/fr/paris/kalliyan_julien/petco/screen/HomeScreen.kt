@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
@@ -80,11 +81,11 @@ fun ShowlistAnimal(list : List<Animaux>, animalActivitesViewModel: AnimalActivit
         modifier = Modifier
             .padding(16.dp) // Espace autour
             .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp)) // Coupe les coins pour les arrondir
-            .background(Color(0xFF590606)) // Ajoute un fond
+            .clip(RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.secondary)
             .border(
                 width = 2.dp,
-                color = Color(0xFF341706), // Couleur de la bordure
+                color = MaterialTheme.colorScheme.secondary,
                 shape = RoundedCornerShape(16.dp)
             ),
         contentAlignment = Alignment.Center
