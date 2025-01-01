@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
     ActivitesPlanifiees::class,
     Animaux::class,
     Especes::class
-                      ], version = 9)
+                      ], version = 11)
 abstract class BD : RoomDatabase() {
     abstract fun ActivitesDao(): ActivitesDao
     abstract fun ActivitesAnimauxDao(): ActivitesAnimauxDao
@@ -51,63 +51,63 @@ abstract class BD : RoomDatabase() {
                     val activitesEspeces = instance?.ActivitesEspecesDao()
 //                    dao?.insert(MyEntity(name = "Valeur Initiale 1"))
 //                    dao?.insert(MyEntity(name = "Valeur Initiale 2"))
-                    especes?.insert(Especes(nom = "Chien"))
-                    especes?.insert(Especes(nom = "Chat"))
-                    especes?.insert(Especes(nom = "Poisson"))
-                    especes?.insert(Especes(nom = "Hamster"))
-                    especes?.insert(Especes(nom = "Lapin"))
+                    especes?.insert(Especes(nom = "chien"))
+                    especes?.insert(Especes(nom = "chat"))
+                    especes?.insert(Especes(nom = "poisson"))
+                    especes?.insert(Especes(nom = "hamster"))
+                    especes?.insert(Especes(nom = "lapin"))
 
-                    activites?.insert(Activites(nom = "Nourrir"))
-                    activites?.insert(Activites(nom = "Promener"))
-                    activites?.insert(Activites(nom = "Brosser"))
-                    activites?.insert(Activites(nom = "Changer l'eau"))
+                    activites?.insert(Activites(nom = "nourrir"))
+                    activites?.insert(Activites(nom = "promener"))
+                    activites?.insert(Activites(nom = "brosser"))
+                    activites?.insert(Activites(nom = "changer l'eau"))
 
                     activitesEspeces?.insert(
                         ActivitesEspeces(
-                            activites!!.getId("Nourrir"),
-                            especes!!.getId("Chien")
+                            activites!!.getId("nourrir"),
+                            especes!!.getId("chien")
                         )
                     )
                     activitesEspeces?.insert(
                         ActivitesEspeces(
-                            activites!!.getId("Promener"),
-                            especes!!.getId("Chien")
+                            activites!!.getId("promener"),
+                            especes!!.getId("chien")
                         )
                     )
                     activitesEspeces?.insert(
                         ActivitesEspeces(
-                            activites!!.getId("Brosser"),
-                            especes!!.getId("Chien")
+                            activites!!.getId("brosser"),
+                            especes!!.getId("chien")
                         )
                     )
                     activitesEspeces?.insert(
                         ActivitesEspeces(
-                            activites!!.getId("Nourrir"),
+                            activites!!.getId("nourrir"),
+                            especes!!.getId("chat")
+                        )
+                    )
+                    activitesEspeces?.insert(
+                        ActivitesEspeces(
+                            activites!!.getId("promener"),
+                            especes!!.getId("chat")
+                        )
+                    )
+                    activitesEspeces?.insert(
+                        ActivitesEspeces(
+                            activites!!.getId("brosser"),
                             especes!!.getId("Chat")
                         )
                     )
                     activitesEspeces?.insert(
                         ActivitesEspeces(
-                            activites!!.getId("Promener"),
-                            especes!!.getId("Chat")
+                            activites!!.getId("nourrir"),
+                            especes!!.getId("poisson")
                         )
                     )
                     activitesEspeces?.insert(
                         ActivitesEspeces(
-                            activites!!.getId("Brosser"),
-                            especes!!.getId("Chat")
-                        )
-                    )
-                    activitesEspeces?.insert(
-                        ActivitesEspeces(
-                            activites!!.getId("Nourrir"),
-                            especes!!.getId("Poisson")
-                        )
-                    )
-                    activitesEspeces?.insert(
-                        ActivitesEspeces(
-                            activites!!.getId("Changer l'eau"),
-                            especes!!.getId("Poisson")
+                            activites!!.getId("changer l'eau"),
+                            especes!!.getId("poisson")
                         )
                     )
                 }

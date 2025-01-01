@@ -11,10 +11,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,7 +31,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -158,17 +163,17 @@ fun AddpetScreen(model : AnimalEspeceViewModel, navController: NavHostController
     ) {
 
         Row{
-            Text("nom de votre nouveaux compagnon: ", modifier = Modifier.padding(10.dp))
+            Text("nom de votre nouveaux compagnon: ", modifier = Modifier.padding(20.dp))
         }
 
         Row {
-            OutlinedTextField(value = model.name.value, onValueChange = {model.name.value = it}, label = { Text("nom") } )
+            OutlinedTextField(value = model.name.value, onValueChange = {model.name.value = it}, label = { Text("nom") }, modifier = Modifier.padding(10.dp) )
         }
 
         Row(modifier = Modifier.padding(20.dp)) {
 
-            Button(onClick = { isDialogOpen = true }){ Icon(Icons.Filled.Add,"add species") }
-
+            OutlinedIconButton(onClick = { isDialogOpen = true }){ Icon(Icons.Filled.Add,"add species", tint = MaterialTheme.colorScheme.primary) }
+            Spacer(modifier = Modifier.width(16.dp))
             ExposedDropdownMenuBox(
                 expanded = expanded,
                 onExpandedChange = {expanded = ! expanded}
@@ -225,11 +230,16 @@ fun AddpetScreen(model : AnimalEspeceViewModel, navController: NavHostController
                         val isSelected = (index == model.selectedIconIndex.intValue)
                         Box(
                             modifier = Modifier
-                                .size(60.dp)
-                                .clip(RoundedCornerShape(8.dp))
-                                .background(if (isSelected) Color.Blue else Color.White)
+                                .width(10.dp)
+                                .height(60.dp)
+                                .clip(RoundedCornerShape(20.dp))
+                                .background(if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface)
                                 .clickable {
-                                    ico = index
+                                    ico = if(ico == index){
+                                        -1
+                                    } else {
+                                        index
+                                    }
                                 },
                             contentAlignment = Alignment.Center
                         ) {
@@ -237,7 +247,7 @@ fun AddpetScreen(model : AnimalEspeceViewModel, navController: NavHostController
                                 painter = painterResource(id = listanimals[index].second),
                                 contentDescription = "Icon $index",
                                 contentScale = ContentScale.Crop,
-                                modifier = Modifier.size(40.dp)
+                                modifier = Modifier.size(45.dp).clip(RoundedCornerShape(8.dp))
                             )
                         }
                     }
@@ -246,7 +256,7 @@ fun AddpetScreen(model : AnimalEspeceViewModel, navController: NavHostController
         }
 
         Row{
-            Button(modifier = Modifier.padding(10.dp), onClick = {  galleryLauncher.launch("image/*")  }){CameraIcon()}
+            OutlinedIconButton(modifier = Modifier.padding(10.dp), onClick = {  galleryLauncher.launch("image/*")  }){CameraIcon()}
             Button(modifier = Modifier.padding(10.dp),onClick = { adding = true }){ Text("valider") }
 
         }

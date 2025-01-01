@@ -3,6 +3,7 @@ package fr.paris.kalliyan_julien.petco.data
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.Companion.CASCADE
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
@@ -10,7 +11,8 @@ import androidx.room.PrimaryKey
     ForeignKey(entity = Especes::class,
         parentColumns = ["id"],
         childColumns = ["espece"],
-        onDelete = CASCADE)]
+        onDelete = CASCADE)],
+    indices = [Index(value = ["nom"], unique = true)]
 )
 data class Animaux(
     @PrimaryKey(autoGenerate = true)

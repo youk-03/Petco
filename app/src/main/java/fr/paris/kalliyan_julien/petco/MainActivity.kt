@@ -85,13 +85,12 @@ fun MainPage(name: String, modifier: Modifier = Modifier, model: MainViewModel =
             startDestination = "home",
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable("home", enterTransition = { slideInHorizontally() }, exitTransition = { slideOutHorizontally()}) { HomeScreen(navController,model, animalActivitesModel) }
-            composable("pictures", enterTransition = { slideInHorizontally() }, exitTransition = { slideOutHorizontally() }) { PicScreen() }
-            composable("animals", enterTransition = { slideInHorizontally() }, exitTransition = { slideOutHorizontally() }) { ActivitesScreen(animalActivitesModel, navController, model) }
-            composable("settings", enterTransition = { slideInHorizontally() }, exitTransition = { slideOutHorizontally() }) { SettingsScreen(settingsManager = settingsManager, model = model) }
+            composable("home", enterTransition = { slideInHorizontally() }, exitTransition = { fadeOut() }) { HomeScreen(navController,model, animalActivitesModel) }
+            composable("animals", enterTransition = { slideInHorizontally() }, exitTransition = { fadeOut() }) { ActivitesScreen(animalActivitesModel, navController, model) }
+            composable("settings", enterTransition = { slideInHorizontally() }, exitTransition = { fadeOut() }) { SettingsScreen(settingsManager = settingsManager, model = model) }
             composable("add_pet", enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) { AddpetScreen(animalEspeceModel, navController) }
             composable("add_activites", enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) { AddActivityScreen(animalActivitesModel) }
-            composable("animal", enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) { AnimalScreen(animalActivitesModel, animalEspeceModel, model, navController)}
+            composable("animal", enterTransition = { slideInHorizontally() }, exitTransition = { fadeOut() }) { AnimalScreen(animalActivitesModel, animalEspeceModel, model, navController)}
         }
     }
 }

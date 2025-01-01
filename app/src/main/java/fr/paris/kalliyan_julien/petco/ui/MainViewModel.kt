@@ -112,9 +112,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application)  {
         NavigationBarItem(selected = currentRoute == "home",
             onClick = { navigateTo(navController,"home", true) },
             icon = { Icon(Icons.Filled.Home, "home") })
-        NavigationBarItem(selected = currentRoute == "pictures",
-            onClick = { navigateTo(navController,"pictures", false) },
-            icon = { CameraIcon() })
         NavigationBarItem(selected = currentRoute == "animals",
             onClick = { navigateTo(navController,"animals", false)},
             icon = { PetIcon() })

@@ -137,8 +137,8 @@ fun AnimalScreen(animalActivitesModel : AnimalActiviteesViewModel, animalEspeceV
         verticalArrangement = Arrangement.SpaceAround
     ){
         Row{
-            Button(onClick = {onDelete = true}) { Text("Supprimer") }
-            Button(onClick = {isDialogOpenModif = true}) { Text("Modifier")}
+            Button(onClick = {onDelete = true}, modifier = Modifier.padding(15.dp)) { Text("Supprimer") }
+            Button(onClick = {isDialogOpenModif = true},  modifier = Modifier.padding(15.dp)) { Text("Modifier")}
         }
         Row{
             AnimalIcon(animal.iconName, animal.iconPath) //afficher l'image en carré avec bord arrondi et plus gros plutot
@@ -149,6 +149,7 @@ fun AnimalScreen(animalActivitesModel : AnimalActiviteesViewModel, animalEspeceV
         }
         Row {
           //liste des activitees de l'animal
+            Text("liste des activites")
         }
         Row{
             Button(onClick = {navigateTo(navController,"add_activites", false)}) { Text("Ajouter une activité") }

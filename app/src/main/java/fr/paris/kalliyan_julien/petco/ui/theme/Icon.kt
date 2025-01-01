@@ -3,6 +3,7 @@ package fr.paris.kalliyan_julien.petco.ui.theme
 import android.content.Context
 import android.net.Uri
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -16,7 +17,7 @@ fun CameraIcon() {
     Icon(
         painter = painterResource(id = R.drawable.camera),
         contentDescription = "Camera Icon",
-        tint = Color.Black // Personnaliser la couleur
+        tint = MaterialTheme.colorScheme.primary
     )
 }
 @Composable
@@ -24,7 +25,7 @@ fun PetIcon() {
     Icon(
         painter = painterResource(id = R.drawable.pet),
         contentDescription = "Camera Icon",
-        tint = Color.Black // Personnaliser la couleur
+        tint = MaterialTheme.colorScheme.primary
     )
 }
 //Icon

@@ -4,12 +4,45 @@ import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import fr.paris.kalliyan_julien.petco.R
+
+val Montserrat = FontFamily(Font(R.font.montserrat))
+val OpenSans = FontFamily(Font(R.font.opensans))
+
+val CustomTypography = Typography(
+    titleLarge = TextStyle(
+        fontSize = 30.sp,
+        fontWeight = FontWeight.Bold,
+        fontFamily = Montserrat
+    ),
+    titleMedium = TextStyle(
+        fontSize = 24.sp,
+        fontWeight = FontWeight.SemiBold,
+        fontFamily = Montserrat
+    ),
+    bodyMedium = TextStyle(
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Normal,
+        fontFamily = OpenSans
+    ),
+    bodyLarge = TextStyle(
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Normal,
+        fontFamily = OpenSans
+    )
+)
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -47,7 +80,7 @@ fun PetCoTheme(
 
     MaterialTheme(
         colorScheme = colors,
-        typography = Typography,
+        typography = CustomTypography,
         content = content
     )
 }
@@ -59,3 +92,4 @@ enum class ThemeType {
     AUTUMN,
     VIOLET_ROSE
 }
+

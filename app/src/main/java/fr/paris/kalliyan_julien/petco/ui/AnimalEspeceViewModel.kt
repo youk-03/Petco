@@ -64,7 +64,7 @@ class AnimalEspeceViewModel(application: Application) : AndroidViewModel(applica
 
         fun addAnimal(name: String, espece: Int, img: String?, iconPath : String?){
                 viewModelScope.launch(Dispatchers.IO) {
-                        val id = animauxdao.insert(Animaux(nom=name, iconName = img, iconPath = iconPath, espece = espece))
+                        val id = animauxdao.insert(Animaux(nom=name.lowercase(), iconName = img, iconPath = iconPath, espece = espece))
                         if(id < 0){
                                 //echec
                                 Log.d("bd", "insertion erreur addAnimal")
@@ -75,7 +75,7 @@ class AnimalEspeceViewModel(application: Application) : AndroidViewModel(applica
 
         fun addEspece(espece: String){
                 viewModelScope.launch(Dispatchers.IO) {
-                        val id = especesdao.insert(Especes(nom = espece))
+                        val id = especesdao.insert(Especes(nom = espece.lowercase()))
                         if(id < 0){
                                 //echec
                                 Log.d("bd", "insertion erreur addEspece")

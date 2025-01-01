@@ -52,7 +52,7 @@ public class AnimalActiviteesViewModel(application: Application)  : AndroidViewM
 
     fun addActivite(activites: String){
         viewModelScope.launch(Dispatchers.IO) {
-            val id = activitesdao.insert(Activites(nom = activites))
+            val id = activitesdao.insert(Activites(nom = activites.lowercase()))
             if(id < 0){
                 //echec
                 Log.d("bd", "insertion erreur addEspece")

@@ -90,17 +90,26 @@ fun ShowlistAnimal(list : List<Animaux>, animalActivitesViewModel: AnimalActivit
             ),
         contentAlignment = Alignment.Center
     ) {
-        LazyColumn(Modifier.wrapContentHeight().padding(16.dp)) {
-            items(list) {
-                SlidingCard (toShow = {AnimalCard(it,it.iconPath,
-                    it.iconName,
-                    onClick = {
-                    animalActivitesViewModel.current_animal.value = it
-                        navigateTo(navController,"animal",false)
-                    }
-                ) })
+        if(list.isEmpty()){
+            Text("c'est bien vide ici :( créez un nouveau compagnon", modifier = Modifier.padding(20.dp).fillMaxWidth().align(Alignment.Center))
+        }
+        else {
+            LazyColumn(Modifier.wrapContentHeight().padding(16.dp)) {
+                items(list) {
+                    SlidingCard(toShow = {
+                        AnimalCard(it, it.iconPath,
+                            it.iconName,
+                            onClick = {
+                                animalActivitesViewModel.current_animal.value = it
+                                navigateTo(navController, "animal", false)
+                            }
+                        )
+                    })
+                }
             }
         }
+
+
     }
 }
 
