@@ -36,8 +36,7 @@ public class AnimalActiviteesViewModel(application: Application)  : AndroidViewM
     var isDialogOpen = mutableStateOf(false)
     var add_activity = mutableStateOf("")
 
-    val hour = mutableIntStateOf(-1)
-    val minute = mutableIntStateOf(-1)
+    var calendar = Calendar.getInstance()
 
 
     /////////////////////////////////////////////////////////////////////////////////:
