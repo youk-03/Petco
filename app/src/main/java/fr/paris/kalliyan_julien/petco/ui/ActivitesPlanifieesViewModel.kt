@@ -2,7 +2,10 @@ package fr.paris.kalliyan_julien.petco.ui
 
 import android.app.Application
 import android.content.Context
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,6 +13,7 @@ import fr.paris.kalliyan_julien.petco.data.ActivitesPlanifiees
 import fr.paris.kalliyan_julien.petco.data.BD
 import fr.paris.kalliyan_julien.petco.deleteNotif
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.Calendar
@@ -22,8 +26,17 @@ class ActivitesPlanifieesViewModel(application: Application)  : AndroidViewModel
 
     var allActivitesPlanifiees = activitesPlanifieesdao.loadAll()
 
+    val id_animal = mutableStateOf(-1)
+    var animalActivitesPlanifiees = activitesPlanifieesdao.getActivites(id_animal.value)
+
     var isSelected = mutableStateOf(false)
     var selectedActivitesPlanifiees =  mutableStateOf(ActivitesPlanifiees(-1,0,0,0,"",0))
+
+    fun onId_animalChange(id: Int) {
+        id_animal.value = id
+        animalActivitesPlanifiees = activitesPlanifieesdao.getActivites(id)
+    }
+
 
     fun getNomActivite(activiteID : Int) : String{
         var nom =""
@@ -46,15 +59,17 @@ class ActivitesPlanifieesViewModel(application: Application)  : AndroidViewModel
     }
 
     fun delete(activitesPlanifiees: ActivitesPlanifiees,context: Context){
-        if(!isPassed(activitesPlanifiees)){
-            runBlocking { // this: CoroutineScope
-                launch {
-                    deleteNotif(getNomActivite(activitesPlanifiees.activite),getNomAnimal(activitesPlanifiees.animal),activitesPlanifiees,context)
-                }
-            }
-        }
         viewModelScope.launch(Dispatchers.IO) {
+            if (!isPassed(activitesPlanifiees)) {
+                deleteNotif(
+                    getNomActivite(activitesPlanifiees.activite),
+                    getNomAnimal(activitesPlanifiees.animal),
+                    activitesPlanifiees,
+                    context
+                )
+            }
             activitesPlanifieesdao.delete(activitesPlanifiees)
+            delay(100)
         }
     }
 

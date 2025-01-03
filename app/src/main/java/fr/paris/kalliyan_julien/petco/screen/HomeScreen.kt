@@ -1,5 +1,6 @@
 package fr.paris.kalliyan_julien.petco.screen
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -25,6 +26,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
@@ -47,6 +49,7 @@ import fr.paris.kalliyan_julien.petco.ui.AnimalActiviteesViewModel
 import fr.paris.kalliyan_julien.petco.ui.AnimalEspeceViewModel
 import fr.paris.kalliyan_julien.petco.ui.MainViewModel
 import fr.paris.kalliyan_julien.petco.ui.theme.animals
+
 
 
 @Composable
@@ -97,7 +100,6 @@ fun ShowlistAnimal(list : List<Animaux>, animalActivitesViewModel: AnimalActivit
         else {
             LazyColumn(Modifier.wrapContentHeight().padding(16.dp)) {
                 items(list) {
-                    SlidingCard(toShow = {
                         AnimalCard(it, it.iconPath,
                             it.iconName,
                             onClick = {
@@ -105,7 +107,6 @@ fun ShowlistAnimal(list : List<Animaux>, animalActivitesViewModel: AnimalActivit
                                 navigateTo(navController, "animal", false)
                             }
                         )
-                    })
                 }
             }
         }
@@ -172,10 +173,17 @@ fun AnimalIcon(iconName: String?, customIconPath: String?) {
 }
 
 @Composable
-fun SlidingCard(toShow : @Composable () -> Unit) {
+fun SlidingCard(toShow : @Composable () -> Unit, action: () -> Unit ) {
     val dismissState = rememberSwipeToDismissBoxState(
         confirmValueChange = {
-            false
+            if (it == SwipeToDismissBoxValue.Settled) {
+                Log.d("swipe", "swiped")
+                action()
+
+                true
+            } else {
+                false
+            }
         }
     )
     androidx.compose.material3.SwipeToDismissBox(

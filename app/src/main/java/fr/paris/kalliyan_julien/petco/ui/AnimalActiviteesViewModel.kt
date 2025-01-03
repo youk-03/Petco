@@ -50,6 +50,7 @@ public class AnimalActiviteesViewModel(application: Application)  : AndroidViewM
 
     var isDialogOpenModif = mutableStateOf(false)
 
+    val adding = mutableStateOf(false)
     /////////////////////////////////////////////////////////////////////////////////
 
 
@@ -88,6 +89,7 @@ public class AnimalActiviteesViewModel(application: Application)  : AndroidViewM
         val intent= scheduleNotification(current_activite.value.nom,notes,current_animal.value.nom,time,context)
 
         insertActivitesPlanifiees(current_activite.value.id,current_animal.value.id,time,notes,repeatCode)
+        adding.value=false
     }
 
     private  fun insertActivitesPlanifiees(activite : Int, animal: Int, date: Long, notes: String, repeat: Int=0){
