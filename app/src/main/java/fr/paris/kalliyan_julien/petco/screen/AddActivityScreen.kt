@@ -1,7 +1,8 @@
 package fr.paris.kalliyan_julien.petco.screen
 
+import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.util.Log
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -35,9 +36,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import fr.paris.kalliyan_julien.petco.scheduleNotification
 import fr.paris.kalliyan_julien.petco.ui.AnimalActiviteesViewModel
-import fr.paris.kalliyan_julien.petco.ui.AnimalEspeceViewModel
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,9 +60,6 @@ fun AddActivityScreen(model : AnimalActiviteesViewModel){
     var add_activity by model.add_activity
 
     var expanded by remember { mutableStateOf(false) }
-
-    var hourSelected by model.hour
-    var minuteSelected by model.hour
 
 
     //ajout d'une actvites dans la bd
@@ -143,11 +140,8 @@ fun AddActivityScreen(model : AnimalActiviteesViewModel){
             OutlinedTextField(value = notes, onValueChange = {notes = it}, label = { Text("Notes") } )
         }
         Row{
-            TimePicker { hour, minute ->
-                Log.d("TimePicker", "Selected Time: $hour:$minute")
-                hourSelected = hour
-                minuteSelected = minute
-            }
+            TimePicker(model.calendar,context)
+            DatePicker(model.calendar,context)
         }
         Row{
             Text("Envoyer une notification :")
@@ -176,7 +170,7 @@ fun AddActivityScreen(model : AnimalActiviteesViewModel){
             Text("Unique")
         }
         Row{
-            Button(onClick = {/*utiliser une varible ajouter dont la valeur changera ici et si toute les entrées == correctes ajouter à la bd*/} ) { Text("Valider") }
+            Button(onClick = {scheduleNotification(activite,notes,model.current_animal.value.nom,model.calendar.timeInMillis,context)} ) { Text("Valider") }
         }
 
     }
@@ -184,6 +178,7 @@ fun AddActivityScreen(model : AnimalActiviteesViewModel){
 
 }
 
+/*
 @Composable
 fun TimePicker(onTimeSelected: (hour: Int, minute: Int) -> Unit) {
     val context = LocalContext.current
@@ -211,6 +206,57 @@ fun TimePicker(onTimeSelected: (hour: Int, minute: Int) -> Unit) {
             hour.value,
             minute.value,
             true
+        ).show()
+    }
+}*/
+
+@Composable
+fun TimePicker(calendar: Calendar, context: Context) {
+    val showTimeDialog = remember { mutableStateOf(false) }
+
+    val timePickerFun = android.app.TimePickerDialog.OnTimeSetListener { _, hour, minute ->
+        calendar.set(Calendar.HOUR, hour)
+        calendar.set(Calendar.MINUTE, minute)
+        showTimeDialog.value=false
+    }
+
+    Button(onClick = { showTimeDialog.value = true }) {
+        Text("Choisir l'heure")
+    }
+
+    if (showTimeDialog.value) {
+        TimePickerDialog(
+            context,
+            timePickerFun,
+            calendar.get(Calendar.HOUR),
+            calendar.get(Calendar.MINUTE),
+            true
+        ).show()
+    }
+}
+
+@Composable
+fun DatePicker(calendar: Calendar,context: Context) {
+    val showDateDialog = remember { mutableStateOf(false) }
+
+    val datePickerFun = android.app.DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+        calendar.set(Calendar.YEAR, year)
+        calendar.set(Calendar.MONTH, month)
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+        showDateDialog.value=false
+    }
+
+    Button(onClick = { showDateDialog.value = true }) {
+        Text("Choisir la date")
+    }
+
+    if (showDateDialog.value) {
+        DatePickerDialog(
+            context,
+            datePickerFun,
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
         ).show()
     }
 }

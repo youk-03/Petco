@@ -48,6 +48,8 @@ class MainActivity : ComponentActivity() {
 
         settingsManager = SettingsManager(this)
 
+        createNotificationChannel(this)
+
         enableEdgeToEdge()
         lifecycleScope.launch {
             settingsManager.theme.collect { theme ->
