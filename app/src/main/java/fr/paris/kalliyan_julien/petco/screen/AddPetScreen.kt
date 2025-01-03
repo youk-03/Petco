@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -42,6 +43,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -66,8 +68,8 @@ import kotlinx.coroutines.flow.forEach
 fun AddpetScreen(model : AnimalEspeceViewModel, navController: NavHostController){
 
     val allespece by model.allEspeceFlow.collectAsState(emptyList())
-    var expanded by remember { mutableStateOf(false) }
-    var esp by remember { mutableStateOf("sélectionnez une espèce") }
+    var expanded by rememberSaveable { mutableStateOf(false) }
+    var esp by rememberSaveable { mutableStateOf("sélectionnez une espèce") }
     var esptmp by model.espece
     var adding by model.add
     var ico by model.selectedIconIndex
@@ -156,98 +158,78 @@ fun AddpetScreen(model : AnimalEspeceViewModel, navController: NavHostController
     }
     //ajout d'une espece dans la bd
 
-    Column(
+    LazyColumn(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceAround
+        verticalArrangement = Arrangement.spacedBy(16.dp) // Ajout d'espacement uniforme
     ) {
-
-        Row{
-            Text("nom de votre nouveaux compagnon: ", modifier = Modifier.padding(20.dp))
+        // Champ de texte pour le nom
+        item {
+            Text(
+                "Nom de votre nouveau compagnon:",
+                modifier = Modifier.padding(20.dp)
+            )
         }
 
-        Row {
-            OutlinedTextField(value = model.name.value, onValueChange = {model.name.value = it}, label = { Text("nom") }, modifier = Modifier.padding(10.dp) )
-        }
-
-        Row(modifier = Modifier.padding(20.dp)) {
-
-            OutlinedIconButton(onClick = { isDialogOpen = true }){ Icon(Icons.Filled.Add,"add species", tint = MaterialTheme.colorScheme.primary) }
-            Spacer(modifier = Modifier.width(16.dp))
-            ExposedDropdownMenuBox(
-                expanded = expanded,
-                onExpandedChange = {expanded = ! expanded}
-            ) {
-                TextField(
-                    modifier = Modifier.menuAnchor(),
-                    readOnly = true,
-                    value = esp,
-                    onValueChange = {esp = it},
-                    label = { Text("Espèces") },
-                    trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                    }
-                )
-
-                ExposedDropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false}
-                ) {
-                    for (e in allespece){
-                        DropdownMenuItem(
-                            onClick = {
-                                esptmp = e
-                                expanded = false
-                                esp = e.nom      },
-                            text = { Text(text = e.nom) }
-                        )
-
-                    }
-                }
-            }
-
-
-        }
-        Row {
-            Text("Choississez une icone ou prenez une photo de votre compagnon : ", modifier = Modifier.padding(10.dp))
-        }
-
-        Row{
-            Box(
+        item {
+            OutlinedTextField(
+                value = model.name.value,
+                onValueChange = { model.name.value = it },
+                label = { Text("Nom") },
                 modifier = Modifier
-                    .padding(16.dp)
                     .fillMaxWidth()
-                    .background(Color.LightGray, shape = RoundedCornerShape(16.dp))
-                    .padding(16.dp)
+                    .padding(horizontal = 10.dp)
+            )
+        }
+
+        // Bouton + liste déroulante
+        item {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(3), // Grille de 3 colonnes
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                OutlinedIconButton(onClick = { isDialogOpen = true }) {
+                    Icon(
+                        Icons.Filled.Add,
+                        contentDescription = "Add species",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+
+                ExposedDropdownMenuBox(
+                    expanded = expanded,
+                    onExpandedChange = { expanded = !expanded },
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    items(listanimals.size) { index ->
-                        val isSelected = (index == model.selectedIconIndex.intValue)
-                        Box(
-                            modifier = Modifier
-                                .width(10.dp)
-                                .height(60.dp)
-                                .clip(RoundedCornerShape(20.dp))
-                                .background(if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface)
-                                .clickable {
-                                    ico = if(ico == index){
-                                        -1
-                                    } else {
-                                        index
-                                    }
+                    TextField(
+                        modifier = Modifier
+                            .menuAnchor()
+                            .weight(1f)
+                            .fillMaxWidth()
+                            .padding(10.dp),
+                        readOnly = true,
+                        value = esp,
+                        onValueChange = { esp = it },
+                        label = { Text("Espèces") },
+                        trailingIcon = {
+                            ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                        }
+                    )
+
+                    ExposedDropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        allespece.forEach { e ->
+                            DropdownMenuItem(
+                                onClick = {
+                                    esptmp = e
+                                    expanded = false
+                                    esp = e.nom
                                 },
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Image(
-                                painter = painterResource(id = listanimals[index].second),
-                                contentDescription = "Icon $index",
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier.size(45.dp).clip(RoundedCornerShape(8.dp))
+                                text = { Text(text = e.nom) }
                             )
                         }
                     }
@@ -255,12 +237,81 @@ fun AddpetScreen(model : AnimalEspeceViewModel, navController: NavHostController
             }
         }
 
-        Row{
-            OutlinedIconButton(modifier = Modifier.padding(10.dp), onClick = {  galleryLauncher.launch("image/*")  }){CameraIcon()}
-            Button(modifier = Modifier.padding(10.dp),onClick = { adding = true }){ Text("valider") }
-
+        // Message et grille d'icônes
+        item {
+            Text(
+                "Choisissez une icône ou prenez une photo de votre compagnon:",
+                modifier = Modifier.padding(10.dp)
+            )
         }
 
+        // Grille d'icônes
+        item {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp) // Fixe une hauteur à la grille
+                    .padding(16.dp)
+                    .background(MaterialTheme.colorScheme.onBackground, shape = RoundedCornerShape(16.dp))
+            ) {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(3),
+                    modifier = Modifier.fillMaxSize().padding(10.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    items(listanimals.size) { index ->
+                        val isSelected = (index == model.selectedIconIndex.intValue)
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(5.dp)
+                                .clip(RoundedCornerShape(20.dp))
+                                .background(
+                                    if (isSelected) MaterialTheme.colorScheme.primary
+                                    else MaterialTheme.colorScheme.onSurface
+                                )
+                                .clickable {
+                                    ico = if (ico == index) -1 else index
+                                },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Image(
+                                painter = painterResource(id = listanimals[index].second),
+                                contentDescription = "Icon $index",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .size(45.dp)
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .fillMaxSize()
+                                    .padding(5.dp)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        // Boutons de validation et prise de photo
+        item {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                OutlinedIconButton(
+                    onClick = { galleryLauncher.launch("image/*") }
+                ) {
+                    CameraIcon()
+                }
+
+                Button(onClick = { adding = true }) {
+                    Text("Valider")
+                }
+            }
+        }
     }
+
 
 }

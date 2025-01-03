@@ -6,11 +6,11 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -54,23 +54,23 @@ fun HomeScreen(navController: NavHostController, model : MainViewModel, animalAc
     //ajouter la prochaine activité qui devrait avoir lieu
     val allanimal by animalActivitesViewModel.allAnimauxFlow.collectAsState(emptyList())
 
-    Column(
+    LazyColumn(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceAround
+        verticalArrangement = Arrangement.spacedBy(16.dp) // Ajout d'espacement uniforme
     ) {
-        Row (modifier = Modifier.padding(20.dp)){
-            Text(model.message[model.i])
+        item{
+            Text(model.message[model.i], modifier = Modifier.padding(20.dp))
         }
 
-        Row(modifier = Modifier.weight(1f)) {
+        item {
 
             ShowlistAnimal(allanimal, animalActivitesViewModel, model, navController)
 
         }
 
-        Row(modifier = Modifier.padding(20.dp)) {
-            Button(onClick = {navigateTo(navController,"add_pet", false)}) { Text("Ajouter un compagnon") }
+        item {
+            Button(onClick = {navigateTo(navController,"add_pet", false)},modifier = Modifier.padding(20.dp)) { Text("Ajouter un compagnon") }
         }
     }
 }
@@ -79,7 +79,8 @@ fun HomeScreen(navController: NavHostController, model : MainViewModel, animalAc
 fun ShowlistAnimal(list : List<Animaux>, animalActivitesViewModel: AnimalActiviteesViewModel, model : MainViewModel, navController: NavHostController){
     Box(
         modifier = Modifier
-            .padding(16.dp) // Espace autour
+            .padding(16.dp)
+            .height(250.dp)
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .background(MaterialTheme.colorScheme.secondary)
@@ -124,16 +125,15 @@ fun AnimalCard(animal: Animaux, iconPath: String?,image : String?, onClick : () 
     ) {
         Row(
             modifier = Modifier
-                .padding(16.dp) // Espacement interne de la carte
+                .padding(16.dp)
                 .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically // Aligne les éléments verticalement
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            // Image de l'animal
+
             AnimalIcon(image, iconPath)
 
-            Spacer(modifier = Modifier.width(16.dp)) // Espace entre l'image et le texte
+            Spacer(modifier = Modifier.width(16.dp))
 
-            // Nom de l'animal
             Text(
                 text = animal.nom,
             )
@@ -150,7 +150,7 @@ fun AnimalIcon(iconName: String?, customIconPath: String?) {
             modifier = Modifier
                 .size(64.dp) // Taille de l'image
                 .clip(CircleShape) // Image ronde
-                .border(2.dp, Color.Gray, CircleShape), // Bordure autour de l'image
+                .border(2.dp, MaterialTheme.colorScheme.onPrimary, CircleShape), // Bordure autour de l'image
             contentScale = ContentScale.Crop // Recadre l'image
         )
     } else if (iconName != null) {

@@ -5,19 +5,25 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,14 +34,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import fr.paris.kalliyan_julien.petco.navigateTo
 import fr.paris.kalliyan_julien.petco.ui.AnimalActiviteesViewModel
 import fr.paris.kalliyan_julien.petco.ui.AnimalEspeceViewModel
 import fr.paris.kalliyan_julien.petco.ui.MainViewModel
 import fr.paris.kalliyan_julien.petco.ui.theme.CameraIcon
+import fr.paris.kalliyan_julien.petco.ui.theme.animals
 import fr.paris.kalliyan_julien.petco.ui.theme.copyImageToAppDirectory
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -86,7 +98,7 @@ fun AnimalScreen(animalActivitesModel : AnimalActiviteesViewModel, animalEspeceV
                     }
                     Row{
                         Text("changer l'icone :")
-                        Button(modifier = Modifier.padding(10.dp), onClick = {  galleryLauncher.launch("image/*")  }){ CameraIcon() }
+                        OutlinedIconButton(modifier = Modifier.padding(10.dp), onClick = {  galleryLauncher.launch("image/*")  }){ CameraIcon() }
                     }
                     Row{
                         Button(modifier = Modifier.padding(10.dp),onClick = {
@@ -131,28 +143,63 @@ fun AnimalScreen(animalActivitesModel : AnimalActiviteesViewModel, animalEspeceV
         animalEspeceViewModel.getEspeceFromDB(animal.espece)
     }
 
-    Column(
+    LazyColumn(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceAround
-    ){
-        Row{
-            Button(onClick = {onDelete = true}, modifier = Modifier.padding(15.dp)) { Text("Supprimer") }
-            Button(onClick = {isDialogOpenModif = true},  modifier = Modifier.padding(15.dp)) { Text("Modifier")}
+        verticalArrangement = Arrangement.spacedBy(16.dp) // Ajout d'espacement uniforme
+    ) {
+        item{
+            Row {
+                Button(
+                    onClick = { onDelete = true },
+                    modifier = Modifier.padding(15.dp)
+                ) { Text("Supprimer") }
+                Button(
+                    onClick = { isDialogOpenModif = true },
+                    modifier = Modifier.padding(15.dp)
+                ) { Text("Modifier") }
+            }
         }
-        Row{
-            AnimalIcon(animal.iconName, animal.iconPath) //afficher l'image en carré avec bord arrondi et plus gros plutot
+        item{
+            AnimalImage(animal.iconName, animal.iconPath)
             Text(animal.nom, modifier = Modifier.padding(20.dp))
         }
-        Row{
+        item{
             Text(espece, modifier = Modifier.padding(20.dp))
         }
-        Row {
+        item {
           //liste des activitees de l'animal
             Text("liste des activites")
         }
-        Row{
+        item{
             Button(onClick = {navigateTo(navController,"add_activites", false)}) { Text("Ajouter une activité") }
         }
+    }
+}
+
+@Composable
+fun AnimalImage(iconName: String?, customIconPath: String?) {
+    if (customIconPath != null) {
+        AsyncImage(
+            model = customIconPath,
+            contentDescription = "Custom Icon",
+            modifier = Modifier
+                .size(128.dp)
+                .clip(RoundedCornerShape(8.dp)),
+            contentScale = ContentScale.Crop
+        )
+    } else if (iconName != null) {
+        val context = LocalContext.current
+        val resId = remember(iconName) {
+            animals[iconName]
+        }
+        Image(
+            painter = painterResource(id = resId!!),//gestion erreur peut etre ???????????????????????????
+            contentDescription = "Default Icon",
+            modifier = Modifier
+                .size(128.dp)
+                .clip(RoundedCornerShape(8.dp)),
+            contentScale = ContentScale.Crop
+        )
     }
 }
