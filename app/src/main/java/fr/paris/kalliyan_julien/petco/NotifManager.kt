@@ -7,7 +7,6 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 
 const val channelID = "channel1"
-const val notificationID = 1
 
 class NotifManager : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent){
@@ -18,6 +17,7 @@ class NotifManager : BroadcastReceiver() {
             .build()
 
         val  manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        manager.notify(notificationID, notification)
+        val notifId= intent.getIntExtra("notifId",0)
+        manager.notify(notifId, notification)
     }
 }

@@ -54,7 +54,7 @@ fun AddActivityScreen(model : AnimalActiviteesViewModel){
 
     var activite by remember { mutableStateOf("sélectionnez une activité") }
     val allactivites by model.allActivitesFlow.collectAsState(emptyList())
-    var activitetmp by model.activite
+    var activitetmp by model.current_activite
 
     var isDialogOpen by model.isDialogOpen
     var add_activity by model.add_activity
@@ -140,8 +140,8 @@ fun AddActivityScreen(model : AnimalActiviteesViewModel){
             OutlinedTextField(value = notes, onValueChange = {notes = it}, label = { Text("Notes") } )
         }
         Row{
-            TimePicker(model.calendar,context)
-            DatePicker(model.calendar,context)
+            TimePicker(model.calendar.value,context)
+            DatePicker(model.calendar.value,context)
         }
         Row{
             Text("Envoyer une notification :")
@@ -170,7 +170,7 @@ fun AddActivityScreen(model : AnimalActiviteesViewModel){
             Text("Unique")
         }
         Row{
-            Button(onClick = {scheduleNotification(activite,notes,model.current_animal.value.nom,model.calendar.timeInMillis,context)} ) { Text("Valider") }
+            Button(onClick = {model.addActivitesPlanifiees(notes,context)} ) { Text("Valider") }
         }
 
     }
@@ -213,11 +213,15 @@ fun TimePicker(onTimeSelected: (hour: Int, minute: Int) -> Unit) {
 @Composable
 fun TimePicker(calendar: Calendar, context: Context) {
     val showTimeDialog = remember { mutableStateOf(false) }
+    val time = Calendar.getInstance()
 
     val timePickerFun = android.app.TimePickerDialog.OnTimeSetListener { _, hour, minute ->
-        calendar.set(Calendar.HOUR, hour)
-        calendar.set(Calendar.MINUTE, minute)
-        showTimeDialog.value=false
+        if(showTimeDialog.value){
+            calendar.set(Calendar.HOUR, hour)
+            calendar.set(Calendar.MINUTE, minute)
+            calendar.set(Calendar.SECOND,0)
+            showTimeDialog.value=false
+        }
     }
 
     Button(onClick = { showTimeDialog.value = true }) {
@@ -228,8 +232,8 @@ fun TimePicker(calendar: Calendar, context: Context) {
         TimePickerDialog(
             context,
             timePickerFun,
-            calendar.get(Calendar.HOUR),
-            calendar.get(Calendar.MINUTE),
+            time.get(Calendar.HOUR),
+            time.get(Calendar.MINUTE),
             true
         ).show()
     }
@@ -238,12 +242,15 @@ fun TimePicker(calendar: Calendar, context: Context) {
 @Composable
 fun DatePicker(calendar: Calendar,context: Context) {
     val showDateDialog = remember { mutableStateOf(false) }
+    val date = Calendar.getInstance()
 
     val datePickerFun = android.app.DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-        calendar.set(Calendar.YEAR, year)
-        calendar.set(Calendar.MONTH, month)
-        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-        showDateDialog.value=false
+        if(showDateDialog.value){
+            calendar.set(Calendar.YEAR, year)
+            calendar.set(Calendar.MONTH, month)
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+            showDateDialog.value=false
+        }
     }
 
     Button(onClick = { showDateDialog.value = true }) {
@@ -254,9 +261,9 @@ fun DatePicker(calendar: Calendar,context: Context) {
         DatePickerDialog(
             context,
             datePickerFun,
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
+            date.get(Calendar.YEAR),
+            date.get(Calendar.MONTH),
+            date.get(Calendar.DAY_OF_MONTH)
         ).show()
     }
 }

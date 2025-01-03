@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ActivitesEspecesDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(pays: ActivitesEspeces)
+    suspend fun insert(activite: ActivitesEspeces)
 
     @Delete
     suspend fun delete(activite: ActivitesEspeces)

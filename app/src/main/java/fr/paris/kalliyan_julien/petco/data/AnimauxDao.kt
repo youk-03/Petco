@@ -23,8 +23,11 @@ interface AnimauxDao {
      fun getPref(pref : String): Flow<List<Animaux>>
 
     @Query("SELECT id FROM Animaux Where nom LIKE :nom")
-    suspend fun getId(nom : String): Int
+    fun getId(nom : String): Int
+
+    @Query("SELECT nom FROM Animaux Where id = :id")
+    fun getNom(id : Int): String
 
     @Update
-    suspend fun updateAnimal(animaux: Animaux): Int
+    fun updateAnimal(animaux: Animaux): Int
 }

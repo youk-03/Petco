@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
     ActivitesPlanifiees::class,
     Animaux::class,
     Especes::class
-                      ], version = 11)
+                      ], version = 13)
 abstract class BD : RoomDatabase() {
     abstract fun ActivitesDao(): ActivitesDao
     abstract fun ActivitesAnimauxDao(): ActivitesAnimauxDao
@@ -35,7 +35,7 @@ abstract class BD : RoomDatabase() {
             if (instance != null) return instance!!
             instance = Room.databaseBuilder(c.applicationContext, BD::class.java, "petnnco")
                 .addCallback(DatabaseCallback())
-                .fallbackToDestructiveMigration().build()
+                .fallbackToDestructiveMigration().allowMainThreadQueries().build()
             Log.d("bd", instance.toString())
             return instance!!
         }

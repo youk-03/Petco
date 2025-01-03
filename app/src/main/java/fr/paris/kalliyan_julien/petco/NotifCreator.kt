@@ -8,32 +8,50 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
-import fr.paris.kalliyan_julien.petco.data.Animaux
+import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
+import androidx.core.content.ContextCompat.startActivity
+import androidx.datastore.preferences.protobuf.NullValue
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import fr.paris.kalliyan_julien.petco.data.ActivitesPlanifiees
+import fr.paris.kalliyan_julien.petco.data.BD
 import java.util.Date
 
-fun scheduleNotification(title: String, message: String, animal: String, time : Long, context: Context) {
+
+fun hash(title: String, message: String, animal: String, time : Long) : Int{
+    return (title.hashCode()+animal.hashCode()+message.hashCode()+time.hashCode()).hashCode()
+}
+
+fun scheduleNotification(title: String, message: String, animal: String, time : Long, context: Context) : PendingIntent? {
+    val notifId= hash(title,message,animal,time)
 
     val intent = Intent(context, NotifManager::class.java)
     intent.putExtra("animal", animal)
     intent.putExtra("title", title)
     intent.putExtra("message", message)
+    intent.putExtra("notifId", notifId)
 
     val pendingIntent = PendingIntent.getBroadcast(
         context,
-        notificationID,
+        notifId,
         intent,
         PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
     )
 
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     if(alarmManager.canScheduleExactAlarms()){
+
+
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
             time,
             pendingIntent
         )
+        showAlert(time, title, message,context)
+        return pendingIntent
+    } else {
+        alarmResquestDialog(context)
+        return null
     }
-    showAlert(time, title, message,context)
 }
 
 private fun showAlert(time: Long, title: String, message: String,context: Context) {
@@ -59,4 +77,27 @@ fun createNotificationChannel(context: Context) {
     channel.description = desc
     val notificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
     notificationManager.createNotificationChannel(channel)
+}
+
+private fun alarmResquestDialog(context: Context) {
+    MaterialAlertDialogBuilder(context)
+        .setMessage("Vous devez activer les notifications pour pouvoir utiliser cette fonctionnalité.")
+        .setPositiveButton("Ok") { _,_ ->
+            context.startActivity(Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+        }
+        .setCancelable(true)
+        .show()
+}
+
+fun deleteNotif(activite: String,animal: String,activitesPlanifiees: ActivitesPlanifiees,context: Context){
+    val intent = PendingIntent.getBroadcast(
+        context,
+        hash(activite,activitesPlanifiees.note,animal,activitesPlanifiees.date),
+        Intent(),
+        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+    )
+
+
+    val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    alarmManager.cancel(intent)
 }

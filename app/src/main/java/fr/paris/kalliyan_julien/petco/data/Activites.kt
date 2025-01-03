@@ -6,7 +6,6 @@ import androidx.room.PrimaryKey
 
 @Entity(indices = [Index(value = ["nom"], unique = true)])
 data class Activites(
-    @PrimaryKey(autoGenerate = true)
-    var id : Int = 0,
+    @PrimaryKey(autoGenerate = true) val id : Int = 0,
     val nom : String
 )

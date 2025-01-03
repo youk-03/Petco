@@ -33,6 +33,7 @@ import fr.paris.kalliyan_julien.petco.screen.AnimalScreen
 import fr.paris.kalliyan_julien.petco.screen.HomeScreen
 import fr.paris.kalliyan_julien.petco.screen.PicScreen
 import fr.paris.kalliyan_julien.petco.screen.SettingsScreen
+import fr.paris.kalliyan_julien.petco.ui.ActivitesPlanifieesViewModel
 import fr.paris.kalliyan_julien.petco.ui.AnimalActiviteesViewModel
 import fr.paris.kalliyan_julien.petco.ui.AnimalEspeceViewModel
 import fr.paris.kalliyan_julien.petco.ui.MainViewModel
@@ -72,7 +73,7 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-fun MainPage(name: String, modifier: Modifier = Modifier, model: MainViewModel = viewModel(), animalEspeceModel: AnimalEspeceViewModel = viewModel(), animalActivitesModel : AnimalActiviteesViewModel = viewModel(), settingsManager : SettingsManager) {
+fun MainPage(name: String, modifier: Modifier = Modifier, model: MainViewModel = viewModel(), animalEspeceModel: AnimalEspeceViewModel = viewModel(), animalActivitesModel : AnimalActiviteesViewModel = viewModel(), activitesPlanifieesViewModel: ActivitesPlanifieesViewModel = viewModel(),settingsManager : SettingsManager) {
     val context = LocalContext.current
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -88,7 +89,7 @@ fun MainPage(name: String, modifier: Modifier = Modifier, model: MainViewModel =
             modifier = Modifier.padding(innerPadding)
         ) {
             composable("home", enterTransition = { slideInHorizontally() }, exitTransition = { fadeOut() }) { HomeScreen(navController,model, animalActivitesModel) }
-            composable("animals", enterTransition = { slideInHorizontally() }, exitTransition = { fadeOut() }) { ActivitesScreen(animalActivitesModel, navController, model) }
+            composable("animals", enterTransition = { slideInHorizontally() }, exitTransition = { fadeOut() }) { ActivitesScreen(activitesPlanifieesViewModel, navController, model) }
             composable("settings", enterTransition = { slideInHorizontally() }, exitTransition = { fadeOut() }) { SettingsScreen(settingsManager = settingsManager, model = model) }
             composable("add_pet", enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) { AddpetScreen(animalEspeceModel, navController) }
             composable("add_activites", enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) { AddActivityScreen(animalActivitesModel) }

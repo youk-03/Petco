@@ -15,8 +15,7 @@ import androidx.room.PrimaryKey
     indices = [Index(value = ["nom"], unique = true)]
 )
 data class Animaux(
-    @PrimaryKey(autoGenerate = true)
-    val id : Int = 0,
+    @PrimaryKey(autoGenerate = true) val id : Int = 0,
     var nom : String,
     var iconName : String?,
     var iconPath : String?,

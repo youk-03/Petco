@@ -22,5 +22,8 @@ interface ActivitesDao {
     fun getPref(pref : String): Flow<List<Activites>>
 
     @Query("SELECT id FROM Activites Where nom LIKE :nom")
-    suspend fun getId(nom : String): Int
+    fun getId(nom : String): Int
+
+    @Query("SELECT nom FROM Activites Where id = :id")
+    fun getNom(id : Int): String
 }
