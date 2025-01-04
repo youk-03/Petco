@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -48,7 +49,7 @@ import java.util.Date
 
 @Composable
 fun ActivitesScreen(model : ActivitesPlanifieesViewModel, navController: NavController, mainModel : MainViewModel) {
-    val listActivites by model.allActivitesPlanifiees.collectAsState(emptyList())
+    val listActivites by model.allActivitesPlanifiees.collectAsState(initial = emptyList())
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -69,10 +70,11 @@ fun ActivitesScreen(model : ActivitesPlanifieesViewModel, navController: NavCont
 
 @Composable
 fun ShowListActivity(list : List<ActivitesPlanifiees>,model : ActivitesPlanifieesViewModel){
+    val context = LocalContext.current
     Box(
         modifier = Modifier
-            .padding(16.dp) // Espace autour
-            .fillMaxWidth()
+            .padding(16.dp)
+            .height(200.dp)
             .clip(RoundedCornerShape(16.dp))
             .background(MaterialTheme.colorScheme.secondary)
             .border(
@@ -90,7 +92,9 @@ fun ShowListActivity(list : List<ActivitesPlanifiees>,model : ActivitesPlanifiee
                 items(list.sortedWith(compareBy{it.date})) {
                     SlidingCard(toShow = {
                         ActiviteCard(it, onClick = { model.select(it) }, model)
-                    })
+                    }, action ={
+                        model.delete(it,context)
+                    } )
                 }
             }
         }
@@ -114,9 +118,9 @@ fun ActiviteCard(activite: ActivitesPlanifiees, onClick : () -> Unit,model : Act
     ) {
         Row(
             modifier = Modifier
-                .padding(16.dp) // Espacement interne de la carte
+                .padding(16.dp)
                 .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically // Aligne les éléments verticalement
+            verticalAlignment = Alignment.CenterVertically
         ) {
             // Date de l'activite
             val date = Date(activite.date)

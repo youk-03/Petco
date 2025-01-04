@@ -3,6 +3,7 @@ package fr.paris.kalliyan_julien.petco.screen
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -36,12 +38,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import fr.paris.kalliyan_julien.petco.navigateTo
+import fr.paris.kalliyan_julien.petco.scheduleNotification
 import fr.paris.kalliyan_julien.petco.ui.AnimalActiviteesViewModel
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddActivityScreen(model : AnimalActiviteesViewModel){
+fun AddActivityScreen(model : AnimalActiviteesViewModel, navController: NavHostController){
 
     val context = LocalContext.current
 
@@ -59,6 +64,25 @@ fun AddActivityScreen(model : AnimalActiviteesViewModel){
     var add_activity by model.add_activity
 
     var expanded by remember { mutableStateOf(false) }
+
+    var adding by model.adding
+
+    if(adding){
+        if(activite == "sélectionnez une activité" || (!hebdo && !daily && !unique) ){
+            Toast.makeText(context, "l'activité et/ou la fréquence ne peuvent pas être vide !", Toast.LENGTH_SHORT) .show()
+            adding = false
+        }
+        else {
+            model.addActivitesPlanifiees(notes,context)
+            activite = "sélectionnez une activité"
+            daily = false
+            hebdo = false
+            unique = false
+            notes = ""
+            navigateTo(navController, "animals", false)
+
+        }
+    }
 
 
     //ajout d'une actvites dans la bd
@@ -90,86 +114,93 @@ fun AddActivityScreen(model : AnimalActiviteesViewModel){
     }
     //ajout d'une activites dans la bd
 
-    Column(
+    LazyColumn(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceAround
     )
     {
-        Row(modifier = Modifier.padding(20.dp)) {
+        item {
+            Row(modifier = Modifier.padding(20.dp)) {
 
-            Button(onClick = { isDialogOpen = true }){ Icon(Icons.Filled.Add,"add activity") }
+                Button(onClick = { isDialogOpen = true }) { Icon(Icons.Filled.Add, "add activity") }
 
-            ExposedDropdownMenuBox(
-                expanded = expanded,
-                onExpandedChange = {expanded = ! expanded}
-            ) {
-                TextField(
-                    modifier = Modifier.menuAnchor(),
-                    readOnly = true,
-                    value = activite,
-                    onValueChange = {activite = it},
-                    label = { Text("Activités") },
-                    trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                    }
-                )
-
-                ExposedDropdownMenu(
+                ExposedDropdownMenuBox(
                     expanded = expanded,
-                    onDismissRequest = { expanded = false}
+                    onExpandedChange = { expanded = !expanded }
                 ) {
-                    for (a in allactivites){
-                        DropdownMenuItem(
-                            onClick = {
-                                activitetmp = a
-                                expanded = false
-                                activite = a.nom      },
-                            text = { Text(text = a.nom) }
-                        )
+                    TextField(
+                        modifier = Modifier.menuAnchor(),
+                        readOnly = true,
+                        value = activite,
+                        onValueChange = { activite = it },
+                        label = { Text("Activités") },
+                        trailingIcon = {
+                            ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                        }
+                    )
 
+                    ExposedDropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        for (a in allactivites) {
+                            DropdownMenuItem(
+                                onClick = {
+                                    activitetmp = a
+                                    expanded = false
+                                    activite = a.nom
+                                },
+                                text = { Text(text = a.nom) }
+                            )
+
+                        }
                     }
                 }
+
+
             }
-
-
         }
 
-        Row{
+        item{
             OutlinedTextField(value = notes, onValueChange = {notes = it}, label = { Text("Notes") } )
         }
-        Row{
-            TimePicker(model.calendar.value,context)
-            DatePicker(model.calendar.value,context)
+        item{
+            Row {
+                TimePicker(model.calendar.value, context)
+                DatePicker(model.calendar.value, context)
+            }
         }
-        Row{
+        item{
             Text("Envoyer une notification :")
         }
-        Row{
-            //notif hebdo quotidienne ou unique on peut pas deselctionner (c nul)
-            RadioButton(enabled = true,selected = hebdo, onClick = {
-                hebdo = !hebdo
-                daily = false
-                unique = false
-            })
-            Text("Hebdomadaire")
+        item{
+            Row {
+                //notif hebdo quotidienne ou unique on peut pas deselctionner (c nul)
+                RadioButton(enabled = true, selected = hebdo, onClick = {
+                    hebdo = !hebdo
+                    daily = false
+                    unique = false
+                })
+                Text("Hebdomadaire")
 
-            RadioButton(enabled = true,selected = daily, onClick = {
-                daily = !daily
-                hebdo = false
-                unique = false
-            })
-            Text("Quotidienne")
+                RadioButton(enabled = true, selected = daily, onClick = {
+                    daily = !daily
+                    hebdo = false
+                    unique = false
+                })
+                Text("Quotidienne")
 
-            RadioButton(enabled = true,selected = unique, onClick = {
-                hebdo = false
-                daily = false
-                unique = !unique
-            })
-            Text("Unique")
+                RadioButton(enabled = true, selected = unique, onClick = {
+                    hebdo = false
+                    daily = false
+                    unique = !unique
+                })
+                Text("Unique")
+            }
         }
-        Row{
-            Button(onClick = {model.addActivitesPlanifiees(notes,context)} ) { Text("Valider") }
+        item{
+            Button(onClick = {adding=true} ) { Text("Valider") }
         }
 
     }

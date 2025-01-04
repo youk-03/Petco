@@ -29,5 +29,5 @@ interface AnimauxDao {
     fun getNom(id : Int): String
 
     @Update
-    fun updateAnimal(animaux: Animaux): Int
+    suspend fun updateAnimal(animaux: Animaux): Int
 }

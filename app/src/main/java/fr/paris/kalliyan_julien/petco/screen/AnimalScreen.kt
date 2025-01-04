@@ -28,6 +28,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import fr.paris.kalliyan_julien.petco.navigateTo
+import fr.paris.kalliyan_julien.petco.ui.ActivitesPlanifieesViewModel
 import fr.paris.kalliyan_julien.petco.ui.AnimalActiviteesViewModel
 import fr.paris.kalliyan_julien.petco.ui.AnimalEspeceViewModel
 import fr.paris.kalliyan_julien.petco.ui.MainViewModel
@@ -52,21 +54,18 @@ import fr.paris.kalliyan_julien.petco.ui.theme.copyImageToAppDirectory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AnimalScreen(animalActivitesModel : AnimalActiviteesViewModel, animalEspeceViewModel: AnimalEspeceViewModel,  mainmodel : MainViewModel, navController: NavController) {
+fun AnimalScreen(animalActivitesModel : AnimalActiviteesViewModel, animalEspeceViewModel: AnimalEspeceViewModel, activitesPlanifieesViewModel : ActivitesPlanifieesViewModel, mainmodel : MainViewModel, navController: NavController) {
     var animal by animalActivitesModel.current_animal
     val espece by animalEspeceViewModel.especename
     var onDelete by remember {mutableStateOf(false)}
     var isDialogOpenModif by animalActivitesModel.isDialogOpenModif
-//    var modif_name by animalActivitesModel.modif_name
-//    modif_name = animal.nom
-//    var modif_iconPath by animalActivitesModel.modif_iconPath
-//    modif_iconPath = if(animal.iconPath != null)
-//        animal.iconPath!!
-//    else{
-//        ""
-//    }
+
+    activitesPlanifieesViewModel.onId_animalChange(animal.id)
+
+    val listActivites by activitesPlanifieesViewModel.animalActivitesPlanifiees.collectAsState(initial = emptyList())
 
     val context = LocalContext.current
+
 
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
@@ -168,8 +167,11 @@ fun AnimalScreen(animalActivitesModel : AnimalActiviteesViewModel, animalEspeceV
             Text(espece, modifier = Modifier.padding(20.dp))
         }
         item {
-          //liste des activitees de l'animal
-            Text("liste des activites")
+
+            Text("liste des activites: ")
+        }
+        item{
+            ShowListActivity(listActivites,activitesPlanifieesViewModel)
         }
         item{
             Button(onClick = {navigateTo(navController,"add_activites", false)}) { Text("Ajouter une activité") }

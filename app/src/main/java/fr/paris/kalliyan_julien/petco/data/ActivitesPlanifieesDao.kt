@@ -21,8 +21,11 @@ interface ActivitesPlanifieesDao {
     @Query("SELECT * FROM ActivitesPlanifiees")
      fun loadAll(): Flow<List<ActivitesPlanifiees>>
 
-    @Query("SELECT * FROM Activites WHERE id in (SELECT activite FROM ActivitesPlanifiees WHERE animal = :animal)")
-     fun getActivites(animal : Int): Flow<List<Activites>>
+//    @Query("SELECT * FROM Activites WHERE id in (SELECT activite FROM ActivitesPlanifiees WHERE animal = :animal)")
+//     fun getActivites(animal : Int): Flow<List<Activites>>
+
+    @Query("SELECT * FROM ActivitesPlanifiees WHERE animal = :animalid")
+     fun getActivites(animalid : Int): Flow<List<ActivitesPlanifiees>>
 
     @Query("SELECT * FROM Animaux WHERE id in (SELECT animal FROM ActivitesPlanifiees WHERE activite = :activite)")
      fun getAnimaux(activite : Int): Flow<List<Animaux>>
