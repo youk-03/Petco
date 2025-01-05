@@ -11,6 +11,7 @@ import android.content.Intent
 import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import fr.paris.kalliyan_julien.petco.data.ActivitesPlanifiees
+import java.util.Calendar
 import java.util.Date
 
 
@@ -99,4 +100,43 @@ fun deleteNotif(activite: String,animal: String,activitesPlanifiees: ActivitesPl
 
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     alarmManager.cancel(intent)
+}
+
+fun repeatNotif(title : String,message : String ,animal : String,time : Long,repeat : Int,context : Context){
+    val calendar= Calendar.getInstance()
+    calendar.timeInMillis= time
+    if(repeat==1){
+        calendar.add(Calendar.DAY_OF_YEAR,1)
+    } else if (repeat==2){
+        calendar.add(Calendar.WEEK_OF_YEAR,1)
+    } else if (repeat==3){
+        calendar.add(Calendar.MONTH,1)
+    }
+    val newTime = calendar.timeInMillis
+
+    val notifId= hash(title,message,animal,newTime,repeat)
+
+    val intent = Intent(context, NotifManager::class.java)
+    intent.putExtra("animal", animal)
+    intent.putExtra("title", title)
+    intent.putExtra("message", message)
+    intent.putExtra("notifId", notifId)
+    intent.putExtra("time",newTime)
+    intent.putExtra("repeat",repeat)
+
+    val pendingIntent = PendingIntent.getBroadcast(
+        context,
+        notifId,
+        intent,
+        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+    )
+
+    val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    if(alarmManager.canScheduleExactAlarms()){
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            newTime,
+            pendingIntent
+        )
+    }
 }

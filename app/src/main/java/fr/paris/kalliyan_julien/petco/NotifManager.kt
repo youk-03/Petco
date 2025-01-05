@@ -27,19 +27,9 @@ class NotifManager : BroadcastReceiver() {
 
         val repeat= intent.getIntExtra("repeat",0)
         val time= intent.getLongExtra("time",0)
-        val calendar : Calendar= Calendar.getInstance()
-        calendar.timeInMillis = time
 
-        if(repeat==1){
-            calendar.add(Calendar.DAY_OF_YEAR,1)
+        if (repeat>0) {
+            repeatNotif(title,message,animal,time,repeat,context)
         }
-        if(repeat==2){
-            calendar.add(Calendar.WEEK_OF_YEAR,1)
-        }
-        if(repeat==3){
-            calendar.add(Calendar.MONTH,1)
-        }
-
-        scheduleNotification(title,message,animal,calendar.timeInMillis,repeat,context)
     }
 }
