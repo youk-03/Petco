@@ -86,7 +86,7 @@ public class AnimalActiviteesViewModel(application: Application)  : AndroidViewM
             repeatCode= 2
         }
 
-        val intent= scheduleNotification(current_activite.value.nom,notes,current_animal.value.nom,time,context)
+        val intent= scheduleNotification(current_activite.value.nom,notes,current_animal.value.nom,time,repeatCode,context)
 
         insertActivitesPlanifiees(current_activite.value.id,current_animal.value.id,time,notes,repeatCode)
         adding.value=false

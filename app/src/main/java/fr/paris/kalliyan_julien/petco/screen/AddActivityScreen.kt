@@ -211,9 +211,8 @@ fun AddActivityScreen(model : AnimalActiviteesViewModel, navController: NavHostC
 @Composable
 fun TimePicker(calendar: Calendar, context: Context) {
     val showTimeDialog = remember { mutableStateOf(false) }
-    val time = Calendar.getInstance()
 
-    val timePickerFun = android.app.TimePickerDialog.OnTimeSetListener { _, hour, minute ->
+    val timePickerFun = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
         if(showTimeDialog.value){
             calendar.set(Calendar.HOUR, hour)
             calendar.set(Calendar.MINUTE, minute)
@@ -230,8 +229,8 @@ fun TimePicker(calendar: Calendar, context: Context) {
         TimePickerDialog(
             context,
             timePickerFun,
-            time.get(Calendar.HOUR),
-            time.get(Calendar.MINUTE),
+            calendar.get(Calendar.HOUR),
+            calendar.get(Calendar.MINUTE),
             true
         ).show()
     }
@@ -240,9 +239,8 @@ fun TimePicker(calendar: Calendar, context: Context) {
 @Composable
 fun DatePicker(calendar: Calendar,context: Context) {
     val showDateDialog = remember { mutableStateOf(false) }
-    val date = Calendar.getInstance()
 
-    val datePickerFun = android.app.DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+    val datePickerFun = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
         if(showDateDialog.value){
             calendar.set(Calendar.YEAR, year)
             calendar.set(Calendar.MONTH, month)
@@ -259,9 +257,9 @@ fun DatePicker(calendar: Calendar,context: Context) {
         DatePickerDialog(
             context,
             datePickerFun,
-            date.get(Calendar.YEAR),
-            date.get(Calendar.MONTH),
-            date.get(Calendar.DAY_OF_MONTH)
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
         ).show()
     }
 }
