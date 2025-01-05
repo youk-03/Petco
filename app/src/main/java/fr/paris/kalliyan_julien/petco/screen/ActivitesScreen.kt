@@ -59,7 +59,6 @@ fun ActivitesScreen(model : ActivitesPlanifieesViewModel, navController: NavCont
 
         Row (modifier = Modifier.padding(20.dp)){
             Text("vos activitées planifiées: ")
-            //possibilité de cliquer sur une activité / gerer / supprimer etc ordonnées en temps
         }
 
         Row(modifier = Modifier.weight(1f)) {
@@ -74,7 +73,7 @@ fun ShowListActivity(list : List<ActivitesPlanifiees>,model : ActivitesPlanifiee
     Box(
         modifier = Modifier
             .padding(16.dp)
-            .height(200.dp)
+            .height(150.dp)
             .clip(RoundedCornerShape(16.dp))
             .background(MaterialTheme.colorScheme.secondary)
             .border(
@@ -137,7 +136,7 @@ fun ActiviteCard(activite: ActivitesPlanifiees, onClick : () -> Unit,model : Act
                 color= textColor
             )
 
-            Spacer(modifier = Modifier.width(16.dp)) // Espace
+            Spacer(modifier = Modifier.width(16.dp))
 
             // Nom de l'animal
             Text(
@@ -145,7 +144,7 @@ fun ActiviteCard(activite: ActivitesPlanifiees, onClick : () -> Unit,model : Act
                 color= textColor
             )
 
-            Spacer(modifier = Modifier.width(16.dp)) // Espace
+            Spacer(modifier = Modifier.width(16.dp))
 
             // Repetition
             var repetitionTewt= ""

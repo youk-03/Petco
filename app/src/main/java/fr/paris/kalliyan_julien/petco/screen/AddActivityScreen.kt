@@ -182,7 +182,7 @@ fun AddActivityScreen(model : AnimalActiviteesViewModel, navController: NavHostC
                     daily = false
                     unique = false
                 })
-                Text("Hebdomadaire")
+                Text("Hebdo")
 
                 RadioButton(enabled = true, selected = daily, onClick = {
                     daily = !daily

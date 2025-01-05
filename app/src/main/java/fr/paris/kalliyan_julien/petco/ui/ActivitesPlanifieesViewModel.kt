@@ -40,7 +40,7 @@ class ActivitesPlanifieesViewModel(application: Application)  : AndroidViewModel
 
     fun getNomActivite(activiteID : Int) : String{
         var nom =""
-        runBlocking { // this: CoroutineScope
+        runBlocking {
             launch {
                 nom= activites.getNom(activiteID)
             }
@@ -50,7 +50,7 @@ class ActivitesPlanifieesViewModel(application: Application)  : AndroidViewModel
 
     fun getNomAnimal(animalID : Int) : String{
         var nom =""
-        runBlocking { // this: CoroutineScope
+        runBlocking {
             launch {
                 nom= animaux.getNom(animalID)
             }

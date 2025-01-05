@@ -64,14 +64,6 @@ import kotlin.random.Random
 
 class MainViewModel(application: Application) : AndroidViewModel(application)  {
 
-//    private val dao by lazy { BD.getDB(application) }
-//    val especesdao = dao.EspecesDao()
-//    val animauxdao = dao.AnimauxDao()
-//    val activites_planifieesdao = dao.ActivitesPlanifieesDao()
-//    val activites_especesdao = dao.ActivitesEspecesDao()
-//    val activites_animauxdao = dao.ActivitesAnimauxDao()
-//    private val bd by lazy { BD.getDB(application) }
-
     val message = listOf("Bonjour ! C'est un plaisir de vous voir ici.",
         "Bienvenue dans PetCo ! Où chaque animal est roi.",
         "Bonjour ! Nous sommes là pour vous aider à prendre soin de votre meilleur ami.",
@@ -79,21 +71,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application)  {
         "Bienvenue dans le monde des amoureux des animaux ! Prenez soin de vos compagnons avec amour.")
 
     val i = Random.nextInt(0,message.size)
-    //val especes = listOf("chat", "chien", "poisson", "perroquet")
-
-   // val picture = mutableStateOf("")
-    //var espece = mutableStateOf(especes[0])
-
-//    val animals = listOf(
-//        "Naya" to R.drawable.naya,
-//        "Gibs" to R.drawable.chat,
-//        "chat_noir" to R.drawable.chatn,
-//        "dog" to R.drawable.dog,
-//        "hamser" to R.drawable.hamster,
-//        "fish" to R.drawable.fish,
-//        "bunny" to R.drawable.lapin
-//    )
-
 
 
     //NAVBAR
