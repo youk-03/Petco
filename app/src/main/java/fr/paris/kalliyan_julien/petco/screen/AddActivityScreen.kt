@@ -182,7 +182,7 @@ fun AddActivityScreen(model : AnimalActiviteesViewModel, navController: NavHostC
                     daily = false
                     unique = false
                 })
-                Text("Hebdomadaire")
+                Text("Hebdo")
 
                 RadioButton(enabled = true, selected = daily, onClick = {
                     daily = !daily
@@ -207,38 +207,6 @@ fun AddActivityScreen(model : AnimalActiviteesViewModel, navController: NavHostC
 
 
 }
-
-/*
-@Composable
-fun TimePicker(onTimeSelected: (hour: Int, minute: Int) -> Unit) {
-    val context = LocalContext.current
-    val calendar = Calendar.getInstance()
-
-    val hour = remember { mutableStateOf(calendar.get(Calendar.HOUR_OF_DAY)) }
-    val minute = remember { mutableStateOf(calendar.get(Calendar.MINUTE)) }
-
-    val showDialog = remember { mutableStateOf(false) }
-
-    Button(onClick = { showDialog.value = true }) {
-        Text("Choisir l'heure")
-    }
-
-    // TimePickerDialog
-    if (showDialog.value) {
-        TimePickerDialog(
-            context,
-            { _, selectedHour, selectedMinute ->
-                hour.value = selectedHour
-                minute.value = selectedMinute
-                showDialog.value = false
-                onTimeSelected(selectedHour, selectedMinute)
-            },
-            hour.value,
-            minute.value,
-            true
-        ).show()
-    }
-}*/
 
 @Composable
 fun TimePicker(calendar: Calendar, context: Context) {

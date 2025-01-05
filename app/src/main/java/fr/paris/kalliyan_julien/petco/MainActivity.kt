@@ -92,7 +92,7 @@ fun MainPage(name: String, modifier: Modifier = Modifier, model: MainViewModel =
             composable("settings", enterTransition = { slideInHorizontally() }, exitTransition = { fadeOut() }) { SettingsScreen(settingsManager = settingsManager, model = model) }
             composable("add_pet", enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) { AddpetScreen(animalEspeceModel, navController) }
             composable("add_activites", enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) { AddActivityScreen(animalActivitesModel, navController) }
-            composable("animal", enterTransition = { slideInHorizontally() }, exitTransition = { fadeOut() }) { AnimalScreen(animalActivitesModel, animalEspeceModel, activitesPlanifieesViewModel,  model, navController)}
+            composable("animal", enterTransition = { slideInHorizontally() }, exitTransition = { fadeOut() }) { AnimalScreen(animalActivitesModel, animalEspeceModel, activitesPlanifieesViewModel,  model,  navController)}
         }
     }
 }

@@ -43,6 +43,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import fr.paris.kalliyan_julien.petco.R
 import fr.paris.kalliyan_julien.petco.navigateTo
 import fr.paris.kalliyan_julien.petco.ui.ActivitesPlanifieesViewModel
 import fr.paris.kalliyan_julien.petco.ui.AnimalActiviteesViewModel
@@ -54,7 +55,7 @@ import fr.paris.kalliyan_julien.petco.ui.theme.copyImageToAppDirectory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AnimalScreen(animalActivitesModel : AnimalActiviteesViewModel, animalEspeceViewModel: AnimalEspeceViewModel, activitesPlanifieesViewModel : ActivitesPlanifieesViewModel, mainmodel : MainViewModel, navController: NavController) {
+fun AnimalScreen(animalActivitesModel : AnimalActiviteesViewModel, animalEspeceViewModel: AnimalEspeceViewModel, activitesPlanifieesViewModel : ActivitesPlanifieesViewModel, mainmodel : MainViewModel,  navController: NavController) {
     var animal by animalActivitesModel.current_animal
     val espece by animalEspeceViewModel.especename
     var onDelete by remember {mutableStateOf(false)}
@@ -85,7 +86,6 @@ fun AnimalScreen(animalActivitesModel : AnimalActiviteesViewModel, animalEspeceV
     )
 
     //modification de l'animal
-    //laisser la possibilité de ne modifier que le nom et l'icone en recuperant une photo dans la galerie
     if(isDialogOpenModif){
         BasicAlertDialog(
             onDismissRequest = {isDialogOpenModif = false},
@@ -196,7 +196,7 @@ fun AnimalImage(iconName: String?, customIconPath: String?) {
             animals[iconName]
         }
         Image(
-            painter = painterResource(id = resId!!),//gestion erreur peut etre ???????????????????????????
+            painter = painterResource(id = resId!!),
             contentDescription = "Default Icon",
             modifier = Modifier
                 .size(128.dp)

@@ -56,12 +56,15 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import fr.paris.kalliyan_julien.petco.data.Especes
 import fr.paris.kalliyan_julien.petco.navigateTo
+import fr.paris.kalliyan_julien.petco.ui.AnimalActiviteesViewModel
 import fr.paris.kalliyan_julien.petco.ui.AnimalEspeceViewModel
 import fr.paris.kalliyan_julien.petco.ui.MainViewModel
 import fr.paris.kalliyan_julien.petco.ui.theme.CameraIcon
 import fr.paris.kalliyan_julien.petco.ui.theme.animals
 import fr.paris.kalliyan_julien.petco.ui.theme.copyImageToAppDirectory
 import kotlinx.coroutines.flow.forEach
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -161,9 +164,9 @@ fun AddpetScreen(model : AnimalEspeceViewModel, navController: NavHostController
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp) // Ajout d'espacement uniforme
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Champ de texte pour le nom
+
         item {
             Text(
                 "Nom de votre nouveau compagnon:",
@@ -179,10 +182,11 @@ fun AddpetScreen(model : AnimalEspeceViewModel, navController: NavHostController
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 10.dp)
+                ,
+                singleLine = true
             )
         }
 
-        // Bouton + liste déroulante
         item {
             Row(
                 modifier = Modifier
@@ -250,7 +254,7 @@ fun AddpetScreen(model : AnimalEspeceViewModel, navController: NavHostController
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp) // Fixe une hauteur à la grille
+                    .height(200.dp)
                     .padding(16.dp)
                     .background(MaterialTheme.colorScheme.onBackground, shape = RoundedCornerShape(16.dp))
             ) {

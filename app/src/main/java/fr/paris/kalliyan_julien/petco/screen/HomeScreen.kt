@@ -60,7 +60,7 @@ fun HomeScreen(navController: NavHostController, model : MainViewModel, animalAc
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp) // Ajout d'espacement uniforme
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item{
             Text(model.message[model.i], modifier = Modifier.padding(20.dp))
@@ -149,25 +149,25 @@ fun AnimalIcon(iconName: String?, customIconPath: String?) {
             model = customIconPath,
             contentDescription = "Custom Icon",
             modifier = Modifier
-                .size(64.dp) // Taille de l'image
-                .clip(CircleShape) // Image ronde
-                .border(2.dp, MaterialTheme.colorScheme.onPrimary, CircleShape), // Bordure autour de l'image
-            contentScale = ContentScale.Crop // Recadre l'image
+                .size(64.dp)
+                .clip(CircleShape)
+                .border(2.dp, MaterialTheme.colorScheme.onPrimary, CircleShape),
+            contentScale = ContentScale.Crop
         )
     } else if (iconName != null) {
-        // Charger l'icône par défaut depuis res/drawable
+
         val context = LocalContext.current
         val resId = remember(iconName) {
             animals[iconName]
         }
         Image(
-            painter = painterResource(id = resId!!),//gestion erreur peut etre ???????????????????????????
+            painter = painterResource(id = resId!!),
             contentDescription = "Default Icon",
             modifier = Modifier
-                .size(64.dp) // Taille de l'image
-                .clip(CircleShape) // Image ronde
-                .border(2.dp, Color.Gray, CircleShape), // Bordure autour de l'image
-            contentScale = ContentScale.Crop // Recadre l'image
+                .size(64.dp)
+                .clip(CircleShape)
+                .border(2.dp, Color.Gray, CircleShape),
+            contentScale = ContentScale.Crop
         )
     }
 }

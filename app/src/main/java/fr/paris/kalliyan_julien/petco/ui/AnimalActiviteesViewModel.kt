@@ -92,6 +92,8 @@ public class AnimalActiviteesViewModel(application: Application)  : AndroidViewM
         adding.value=false
     }
 
+
+
     private  fun insertActivitesPlanifiees(activite : Int, animal: Int, date: Long, notes: String, repeat: Int=0){
         viewModelScope.launch(Dispatchers.IO) {
             val id= activitesPlanifieesdao.insert(ActivitesPlanifiees(
