@@ -9,26 +9,25 @@ import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
 import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
-import androidx.core.content.ContextCompat.startActivity
-import androidx.datastore.preferences.protobuf.NullValue
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import fr.paris.kalliyan_julien.petco.data.ActivitesPlanifiees
-import fr.paris.kalliyan_julien.petco.data.BD
 import java.util.Date
 
 
-fun hash(title: String, message: String, animal: String, time : Long) : Int{
-    return (title.hashCode()+animal.hashCode()+message.hashCode()+time.hashCode()).hashCode()
+fun hash(title: String, message: String, animal: String, time : Long, repeat: Int) : Int{
+    return (title.hashCode()+animal.hashCode()+message.hashCode()+time.hashCode()+repeat).hashCode()
 }
 
-fun scheduleNotification(title: String, message: String, animal: String, time : Long, context: Context) : PendingIntent? {
-    val notifId= hash(title,message,animal,time)
+fun scheduleNotification(title: String, message: String, animal: String, time : Long, repeat: Int, context: Context) : PendingIntent? {
+    val notifId= hash(title,message,animal,time,repeat)
 
     val intent = Intent(context, NotifManager::class.java)
     intent.putExtra("animal", animal)
     intent.putExtra("title", title)
     intent.putExtra("message", message)
     intent.putExtra("notifId", notifId)
+    intent.putExtra("time",time)
+    intent.putExtra("repeat",repeat)
 
     val pendingIntent = PendingIntent.getBroadcast(
         context,
@@ -92,7 +91,7 @@ private fun alarmResquestDialog(context: Context) {
 fun deleteNotif(activite: String,animal: String,activitesPlanifiees: ActivitesPlanifiees,context: Context){
     val intent = PendingIntent.getBroadcast(
         context,
-        hash(activite,activitesPlanifiees.note,animal,activitesPlanifiees.date),
+        hash(activite,activitesPlanifiees.note,animal,activitesPlanifiees.date,activitesPlanifiees.repeat),
         Intent(),
         PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
     )

@@ -108,6 +108,11 @@ fun ActiviteCard(activite: ActivitesPlanifiees, onClick : () -> Unit,model : Act
     var textColor = Color.Unspecified
     if(model.isPassed(activite)){
         textColor=MaterialTheme.colorScheme.tertiary
+        if(activite.repeat>0){
+            while(model.isPassed(activite)){
+                model.updateDate(activite)
+            }
+        }
     }
     Card(
         modifier = Modifier

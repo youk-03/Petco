@@ -88,4 +88,19 @@ class ActivitesPlanifieesViewModel(application: Application)  : AndroidViewModel
         isSelected.value= !isSelected.value
         selectedActivitesPlanifiees.value= activites
     }
+
+    fun updateDate(activites: ActivitesPlanifiees){
+        val cal= Calendar.getInstance()
+        cal.timeInMillis= activites.date
+        if(activites.repeat==1){
+            cal.add(Calendar.DAY_OF_MONTH,1)
+        }
+        if(activites.repeat==2){
+            cal.add(Calendar.WEEK_OF_YEAR,1)
+        }
+        if(activites.repeat==3){
+            cal.add(Calendar.MONTH,1)
+        }
+        activites.date=cal.timeInMillis
+    }
 }
