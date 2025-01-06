@@ -3,7 +3,6 @@ package fr.paris.kalliyan_julien.petco.screen
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -40,7 +39,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import fr.paris.kalliyan_julien.petco.navigateTo
-import fr.paris.kalliyan_julien.petco.scheduleNotification
 import fr.paris.kalliyan_julien.petco.ui.AnimalActiviteesViewModel
 import java.util.Calendar
 
@@ -214,7 +212,7 @@ fun TimePicker(calendar: Calendar, context: Context) {
 
     val timePickerFun = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
         if(showTimeDialog.value){
-            calendar.set(Calendar.HOUR, hour)
+            calendar.set(Calendar.HOUR_OF_DAY, hour)
             calendar.set(Calendar.MINUTE, minute)
             calendar.set(Calendar.SECOND,0)
             showTimeDialog.value=false
