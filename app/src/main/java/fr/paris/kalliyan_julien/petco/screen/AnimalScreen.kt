@@ -171,7 +171,7 @@ fun AnimalScreen(animalActivitesModel : AnimalActiviteesViewModel, animalEspeceV
             Text("liste des activites: ")
         }
         item{
-            ShowListActivity(listActivites,activitesPlanifieesViewModel)
+            ShowListActivity(listActivites,activitesPlanifieesViewModel,false)
         }
         item{
             Button(onClick = {navigateTo(navController,"add_activites", false)}) { Text("Ajouter une activité") }

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -31,6 +32,7 @@ import fr.paris.kalliyan_julien.petco.ui.MainViewModel
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -39,6 +41,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.window.core.layout.WindowSizeClass
+import androidx.window.core.layout.WindowWidthSizeClass
 import fr.paris.kalliyan_julien.petco.data.Activites
 import fr.paris.kalliyan_julien.petco.data.ActivitesPlanifiees
 import fr.paris.kalliyan_julien.petco.data.Animaux
@@ -48,7 +52,7 @@ import java.util.Calendar
 import java.util.Date
 
 @Composable
-fun ActivitesScreen(model : ActivitesPlanifieesViewModel, navController: NavController, mainModel : MainViewModel) {
+fun ActivitesScreen(model : ActivitesPlanifieesViewModel, navController: NavController, mainModel : MainViewModel, windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass) {
     val listActivites by model.allActivitesPlanifiees.collectAsState(initial = emptyList())
 
     Column(
@@ -62,25 +66,48 @@ fun ActivitesScreen(model : ActivitesPlanifieesViewModel, navController: NavCont
         }
 
         Row(modifier = Modifier.weight(1f)) {
-            ShowListActivity(listActivites,model)
+            if(windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT) {
+                ShowListActivity(listActivites, model, true) //portrait
+            }
+            else{
+                ShowListActivity(listActivites, model, false) //paysage
+            }
         }
     }
 }
 
 @Composable
-fun ShowListActivity(list : List<ActivitesPlanifiees>,model : ActivitesPlanifieesViewModel){
+fun ShowListActivity(list : List<ActivitesPlanifiees>,model : ActivitesPlanifieesViewModel, isPortrait : Boolean){
     val context = LocalContext.current
+    var boxModifier: Modifier? = null
+
+    val paysageModifier = Modifier
+        .padding(16.dp)
+        .height(150.dp)
+        .clip(RoundedCornerShape(16.dp))
+        .background(MaterialTheme.colorScheme.secondary)
+        .border(
+            width = 2.dp,
+            color = MaterialTheme.colorScheme.secondary,
+            shape = RoundedCornerShape(16.dp)
+        )
+    val portraitModifier = Modifier
+        .padding(16.dp)
+        .clip(RoundedCornerShape(16.dp))
+        .background(MaterialTheme.colorScheme.secondary)
+        .border(
+            width = 2.dp,
+            color = MaterialTheme.colorScheme.secondary,
+            shape = RoundedCornerShape(16.dp)
+        )
+    boxModifier = if(isPortrait){
+        portraitModifier
+    }
+    else{
+        paysageModifier
+    }
     Box(
-        modifier = Modifier
-            .padding(16.dp)
-            .height(150.dp)
-            .clip(RoundedCornerShape(16.dp))
-            .background(MaterialTheme.colorScheme.secondary)
-            .border(
-                width = 2.dp,
-                color = MaterialTheme.colorScheme.secondary,
-                shape = RoundedCornerShape(16.dp)
-            ),
+        modifier = boxModifier,
         contentAlignment = Alignment.Center
     ) {
         if(list.isEmpty()){

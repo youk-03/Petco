@@ -21,6 +21,7 @@ datastorePreferencesCoreJvm = "1.1.1"
 datastorePreferences = "1.1.1"
 datastore = "1.1.1"
 material = "1.12.0"
+adaptiveAndroid = "1.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -49,6 +50,7 @@ androidx-datastore-preferences-core-jvm = { group = "androidx.datastore", name =
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePreferences" }
 androidx-datastore = { group = "androidx.datastore", name = "datastore", version.ref = "datastore" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+androidx-adaptive-android = { group = "androidx.compose.material3.adaptive", name = "adaptive-android", version.ref = "adaptiveAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
